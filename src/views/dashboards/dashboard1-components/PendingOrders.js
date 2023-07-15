@@ -47,6 +47,21 @@ const orders = [
     color: "error.main",
     text: "Payment was made of $64.95 to Michael Anderson",
   },
+  {
+    time: "09.47",
+    color: "primary.main",
+    text: "Crispy Veg Burger",
+  },
+  {
+    time: "09.48",
+    color: "warning.main",
+    text: "New Sale recorded #ML-3467",
+  },
+  {
+    time: "09.49",
+    color: "error.main",
+    text: "Payment was made of $64.95 to Michael Anderson",
+  },
 ];
 
 const PendingOrders = () => {
@@ -86,7 +101,7 @@ const PendingOrders = () => {
               }}
               gutterBottom
             >
-              Pending Oders
+              Pending Orders
             </Typography>
             <Typography
               color="textSecondary"
@@ -143,6 +158,8 @@ const PendingOrders = () => {
         <Timeline
           sx={{
             p: 0,
+            maxHeight: 350,
+            overflowY: "auto",
           }}
         >
           {orders.map((order) => (

@@ -9,6 +9,7 @@ import {
   TableContainer ,
   TableRow,
   Chip,
+  Rating
 } from "@mui/material";
 
 const products = [
@@ -20,6 +21,7 @@ const products = [
     priority: "Low",
     pbg: "primary.main",
     budget: "3.9",
+    rating: 4,
   },
   {
     id: "2",
@@ -29,6 +31,7 @@ const products = [
     priority: "Medium",
     pbg: "secondary.main",
     budget: "24.5",
+    rating: 3,
   },
   {
     id: "3",
@@ -38,6 +41,7 @@ const products = [
     priority: "High",
     pbg: "error.main",
     budget: "12.8",
+    rating: 4.2,
   },
   {
     id: "4",
@@ -47,6 +51,7 @@ const products = [
     priority: "Critical",
     pbg: "success.main",
     budget: "2.4",
+    rating: 2.1,
   },
   {
     id: "5",
@@ -56,6 +61,7 @@ const products = [
     priority: "Critical",
     pbg: "success.main",
     budget: "2.4",
+    rating: 3,
   }
 ];
 
@@ -63,7 +69,7 @@ const ExTable = () => {
   return (
     <TableContainer
     sx={{
-      maxHeight: 400
+      maxHeight: 360
     }}
     >
       <Table
@@ -82,22 +88,22 @@ const ExTable = () => {
           </TableCell>
           <TableCell>
             <Typography color="textSecondary" variant="h6">
-              Assigned
+              Item
             </Typography>
           </TableCell>
-          <TableCell>
+          {/* <TableCell>
             <Typography color="textSecondary" variant="h6">
               Name
             </Typography>
-          </TableCell>
-          <TableCell>
+          </TableCell> */}
+          {/* <TableCell>
             <Typography color="textSecondary" variant="h6">
               Priority
             </Typography>
-          </TableCell>
+          </TableCell> */}
           <TableCell align="right">
             <Typography color="textSecondary" variant="h6">
-              Budget
+              Rating
             </Typography>
           </TableCell>
         </TableRow>
@@ -131,23 +137,23 @@ const ExTable = () => {
                   >
                     {product.name}
                   </Typography>
-                  <Typography
+                  {/* <Typography
                     color="textSecondary"
                     sx={{
                       fontSize: "13px",
                     }}
                   >
                     {product.post}
-                  </Typography>
+                  </Typography> */}
                 </Box>
               </Box>
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Typography color="textSecondary" variant="h6">
                 {product.pname}
               </Typography>
-            </TableCell>
-            <TableCell>
+            </TableCell> */}
+            {/* <TableCell>
               <Chip
                 sx={{
                   pl: "4px",
@@ -158,9 +164,9 @@ const ExTable = () => {
                 size="small"
                 label={product.priority}
               ></Chip>
-            </TableCell>
+            </TableCell> */}
             <TableCell align="right">
-              <Typography variant="h6">${product.budget}k</Typography>
+              <Rating name="read-only" value={product.rating} readOnly />
             </TableCell>
           </TableRow>
         ))}

@@ -19,14 +19,14 @@ const Dashboard1 = () => {
           <SalesOverview />
         </Grid>
         {/* ------------------------- row 2 ------------------------- */}
-        <Grid item xs={12} lg={4}>
+        <Grid item xs={12} lg={6}>
           <PendingOrders />
         </Grid>
-        <Grid item xs={12} lg={8}>
+        <Grid item xs={12} lg={6}>
           <ProductPerformance />
         </Grid>
         {/* ------------------------- row 3 ------------------------- */}
-        <BlogCard />
+        {/* <BlogCard /> */}
       </Grid>
     </Box>
   );
