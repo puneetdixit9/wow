@@ -7,66 +7,17 @@ import { MultipleValuesAutocomplete } from "../../components/Forms/AutoComplete/
 import { CheckboxesAutocomplete } from "../../components/Forms/AutoComplete/CheckboxesAutocomplete";
 import { SizesAutocomplete } from "../../components/Forms/AutoComplete/SizesAutocomplete";
 
+
+import { FoodItemsCard } from "../dashboards/dashboard1-components";
+
 const ExAutoComplete = () => {
   // 2
 
   return (
     <Box>
       <Grid container spacing={0}>
-        {/* ------------------------- row 1 ------------------------- */}
-        <Grid
-          item
-          xs={12}
-          lg={4}
-          sm={6}
-          sx={{
-            display: "flex",
-            alignItems: "stretch",
-          }}
-        >
-          <ComboBoxAutocomplete />
-        </Grid>
-
-        {/* ------------------------- row 5 ------------------------- */}
-        <Grid
-          item
-          xs={12}
-          lg={4}
-          sm={6}
-          sx={{
-            display: "flex",
-            alignItems: "stretch",
-          }}
-        >
-          <MultipleValuesAutocomplete />
-        </Grid>
-
-        {/* ------------------------- row 6 ------------------------- */}
-        <Grid
-          item
-          xs={12}
-          lg={4}
-          sm={6}
-          sx={{
-            display: "flex",
-            alignItems: "stretch",
-          }}
-        >
-          <CheckboxesAutocomplete />
-        </Grid>
-        {/* ------------------------- row 7 ------------------------- */}
-        <Grid
-          item
-          xs={12}
-          lg={4}
-          sm={6}
-          sx={{
-            display: "flex",
-            alignItems: "stretch",
-          }}
-        >
-          <SizesAutocomplete />
-        </Grid>
+        
+        <FoodItemsCard />
       </Grid>
     </Box>
   );

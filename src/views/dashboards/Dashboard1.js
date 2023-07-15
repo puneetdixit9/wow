@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Box } from "@mui/material";
 
 import {
-  BlogCard,
+  FoodItemsCard,
   SalesOverview,
   ProductPerformance,
   PendingOrders,
@@ -26,7 +26,7 @@ const Dashboard1 = () => {
           <ProductPerformance />
         </Grid>
         {/* ------------------------- row 3 ------------------------- */}
-        {/* <BlogCard /> */}
+        {/* <FoodItemsCard /> */}
       </Grid>
     </Box>
   );

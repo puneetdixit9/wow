@@ -1,6 +1,6 @@
-import BlogCard from "./BlogCard";
+import FoodItemsCard from "./FoodItemsCard";
 import ProductPerformance from "./ProductPerformance";
 import SalesOverview from "./SalesOverview";
 import PendingOrders from "./PendingOrders";
 
-export { BlogCard, ProductPerformance, SalesOverview, PendingOrders };
+export { FoodItemsCard, ProductPerformance, SalesOverview, PendingOrders };
