@@ -1,43 +1,29 @@
-import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-
-/****Layouts*****/
-const FullLayout = lazy(() => import("../layouts/FullLayout/FullLayout.js"));
-/****End Layouts*****/
-
-/*****Pages******/
-const Dashboard1 = lazy(() => import("../views/dashboards/Dashboard1.js"));
-
-/*****Tables******/
-const BasicTable = lazy(() => import("../views/tables/BasicTable.js"));
-const Cart = lazy(() => import("../views/checkout/Checkout.js"))
-
-// form elements
-const ExAutoComplete = lazy(() =>
-  import("../views/FormElements/ExAutoComplete.js")
-);
-const ExButton = lazy(() => import("../views/FormElements/ExButton.js"));
-const ExCheckbox = lazy(() => import("../views/FormElements/ExCheckbox.js"));
-const ExRadio = lazy(() => import("../views/FormElements/ExRadio.js"));
-const ExSlider = lazy(() => import("../views/FormElements/ExSlider.js"));
-const ExSwitch = lazy(() => import("../views/FormElements/ExSwitch.js"));
-// form layouts
-const FormLayouts = lazy(() => import("../views/FormLayouts/FormLayouts.js"));
-
-/*****Routes******/
+import FullLayout from "../layouts/FullLayout/FullLayout.js";
+import Dashboard1 from "../views/dashboards/Dashboard1.js";
+import BasicTable from "../views/tables/BasicTable.js";
+import Checkout from "../views/checkout/Checkout.js";
+import ExAutoComplete from "../views/FormElements/ExAutoComplete.js";
+import ExButton from "../views/FormElements/ExButton.js";
+import ExCheckbox from "../views/FormElements/ExCheckbox.js";
+import ExRadio from "../views/FormElements/ExRadio.js";
+import ExSlider from "../views/FormElements/ExSlider.js";
+import ExSwitch from "../views/FormElements/ExSwitch.js";
+import FormLayouts from "../views/FormLayouts/FormLayouts.js";
+import Inventory from "../views/inventory/Inventory.js";
 
 const ThemeRoutes = [
   {
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="wow-pizza/dashboards/dashboard1" /> },
-      { path: "wow-pizza/dashboards/dashboard1", exact: true, element: <Dashboard1 /> },
+      { path: "/", element: <Navigate to="wow-pizza/dashboard" /> },
+      { path: "wow-pizza/dashboard", exact: true, element: <Dashboard1 /> },
+      { path: "/wow-pizza/food-items", element: <ExAutoComplete /> },
+      { path: "/wow-pizza/cart", element: <Checkout /> },
+      { path: "/wow-pizza/inventory", element: <Inventory /> },
       { path: "tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts/form-layouts", element: <FormLayouts /> },
-      { path: "/wow-pizza/form-elements/autocomplete", element: <ExAutoComplete /> },
-      { path: "/wow-pizza/form-elements/checkout", element: <Cart /> },
-      { path: "/form-elements/button", element: <ExButton /> },
       { path: "/form-elements/checkbox", element: <ExCheckbox /> },
       { path: "/form-elements/radio", element: <ExRadio /> },
       { path: "/form-elements/slider", element: <ExSlider /> },

@@ -67,8 +67,8 @@ export default function CartTable() {
                     
                     <TableRow>
                         <TableCell>Item</TableCell>
-                        <TableCell align="right">Qty.</TableCell>
-                        <TableCell align="right">Rate/Qty.</TableCell>
+                        <TableCell align="center">Qty.</TableCell>
+                        <TableCell align="center">Rate/Qty.</TableCell>
                         <TableCell align="right">Sum</TableCell>
                     </TableRow>
                 </TableHead>
@@ -81,8 +81,8 @@ export default function CartTable() {
                                     <Typography sx={{ ml: 2 }}>{item.name}</Typography>
                                 </Box>
                             </TableCell>
-                            <TableCell align="right">{item.quantity}</TableCell>
-                            <TableCell align="right">{item.prize}</TableCell>
+                            <TableCell align="center">{item.quantity}</TableCell>
+                            <TableCell align="center">{item.prize}</TableCell>
                             <TableCell align="right">{item.prize * item.quantity}</TableCell>
                         </TableRow>
                     ))}

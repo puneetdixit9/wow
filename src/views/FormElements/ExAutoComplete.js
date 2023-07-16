@@ -16,7 +16,6 @@ const ExAutoComplete = () => {
   return (
     <Box>
       <Grid container spacing={0}>
-        
         <FoodItemsCard />
       </Grid>
     </Box>

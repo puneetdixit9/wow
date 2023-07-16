@@ -15,27 +15,27 @@ const Menuitems = [
   {
     title: "Dashboard",
     icon: DashboardOutlinedIcon,
-    href: "/wow-pizza/dashboards/dashboard1",
+    href: "/wow-pizza/dashboard",
   },
   {
-    title: "Order",
+    title: "Food Items",
     icon: FastfoodIcon,
-    href: "/wow-pizza/form-elements/autocomplete",
+    href: "/wow-pizza/food-items",
   },
   {
     title: "Cart",
     icon: ShoppingCartSharpIcon,
-    href: "/wow-pizza/form-elements/checkout",
+    href: "/wow-pizza/cart",
   },
   {
     title: "Inventory",
     icon: InventoryIcon,
-    href: "/form-elements/button",
+    href: "/wow-pizza/inventory",
   },
   // {
   //   title: "Buttons",
   //   icon: AspectRatioOutlinedIcon,
-  //   href: "/form-elements/button",
+  //   href: "/wow-pizza/inventory",
   // },
   // {
   //   title: "Checkbox",

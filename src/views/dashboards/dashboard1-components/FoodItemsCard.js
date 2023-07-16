@@ -95,7 +95,7 @@ const FoodItemsCard = () => {
           key={index}
           item
           xs={12}
-          lg={4}
+          lg={3}
           sx={{
             display: "flex",
             alignItems: "stretch",
@@ -108,7 +108,7 @@ const FoodItemsCard = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                padding: "30px",
+                padding: "5px",
               }}
             >
               <div>
@@ -134,7 +134,7 @@ const FoodItemsCard = () => {
                     </Button>
                   </Grid>
                   <Grid>
-                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Quantity(s): {quantities[index]}</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Qty: {quantities[index]}</Typography>
                   </Grid>
 
                   <Grid>
