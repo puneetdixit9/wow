@@ -9,6 +9,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import AutoAwesomeMosaicOutlinedIcon from '@mui/icons-material/AutoAwesomeMosaicOutlined';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
 
 const Menuitems = [
   {
@@ -17,9 +18,14 @@ const Menuitems = [
     href: "/wow-pizza/dashboards/dashboard1",
   },
   {
-    title: "New Order",
+    title: "Order",
     icon: FastfoodIcon,
     href: "/wow-pizza/form-elements/autocomplete",
+  },
+  {
+    title: "Cart",
+    icon: ShoppingCartSharpIcon,
+    href: "/wow-pizza/form-elements/checkout",
   },
   {
     title: "Inventory",

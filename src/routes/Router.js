@@ -10,6 +10,7 @@ const Dashboard1 = lazy(() => import("../views/dashboards/Dashboard1.js"));
 
 /*****Tables******/
 const BasicTable = lazy(() => import("../views/tables/BasicTable.js"));
+const Cart = lazy(() => import("../views/checkout/Checkout.js"))
 
 // form elements
 const ExAutoComplete = lazy(() =>
@@ -35,6 +36,7 @@ const ThemeRoutes = [
       { path: "tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts/form-layouts", element: <FormLayouts /> },
       { path: "/wow-pizza/form-elements/autocomplete", element: <ExAutoComplete /> },
+      { path: "/wow-pizza/form-elements/checkout", element: <Cart /> },
       { path: "/form-elements/button", element: <ExButton /> },
       { path: "/form-elements/checkbox", element: <ExCheckbox /> },
       { path: "/form-elements/radio", element: <ExRadio /> },

@@ -89,7 +89,7 @@ const FoodItemsCard = () => {
   };
 
   return (
-    <Grid container>
+    <Grid container >
       {items.map((item, index) => (
         <Grid
           key={index}
@@ -118,7 +118,7 @@ const FoodItemsCard = () => {
                 <Grid container alignItems="center" justifyContent="space-between">
                   <Grid item>
                     <Typography color="textSecondary" sx={{ fontSize: "18px", fontWeight: "400", mt: 1 }}>
-                      <CurrencyRupeeIcon /> {item.price}
+                      <CurrencyRupeeIcon sx={{ fontSize: 'inherit', fontWeight: 'inherit', mr: '-2px' }} /> {item.price}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -158,6 +158,20 @@ const FoodItemsCard = () => {
           </Card>
         </Grid>
       ))}
+      <Grid container justifyContent="center">
+        <Grid item 
+        xs={12}
+        lg={12}
+        >
+          <Button
+            variant="contained"
+            sx={{ mt: "25px", width:"100%", height: "60px", fontSize: "1.3rem", fontWeight: "bold" }}
+            color="success"
+          >
+            Go to Cart
+          </Button>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };
