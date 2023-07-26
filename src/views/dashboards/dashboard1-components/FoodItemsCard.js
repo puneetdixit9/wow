@@ -1,65 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Button, Grid, Rating } from "@mui/material";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
+
+
+import { getItems } from "../../../redux/actions/Items";
+
 
 const items = [
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
-    title: "Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
+    item_name: "Pizza",
     price: "140",
     btncolor: "primary",
     rating: 3,
   }, {
-    img: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
-    title: "Burger",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
+    item_name: "Burger",
     price: "180",
     btncolor: "primary",
     rating: 4,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
-    title: "Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
+    item_name: "Pizza",
     price: "250",
     btncolor: "primary",
     rating: 1,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/7bd/38f3a8f6ef59e195c0482962f43057bd.jpg",
-    title: "Burger",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/7bd/38f3a8f6ef59e195c0482962f43057bd.jpg",
+    item_name: "Burger",
     price: "200",
     btncolor: "primary",
     rating: 3,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/4c4/61c3337a2054649a6b4e8704670784c4.jpg",
-    title: "Burger",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/4c4/61c3337a2054649a6b4e8704670784c4.jpg",
+    item_name: "Burger",
     price: "210",
     btncolor: "primary",
     rating: 5,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/72b/d5bc5b32dd177f5f207cad66556a572b.jpg",
-    title: "Veg Loaged Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/72b/d5bc5b32dd177f5f207cad66556a572b.jpg",
+    item_name: "Veg Loaged Pizza",
     price: "150",
     btncolor: "primary",
     rating: 3,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
-    title: "Veg Loaged Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
+    item_name: "Veg Loaged Pizza",
     price: "140",
     btncolor: "primary",
     rating: 2,
   }, {
-    img: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
-    title: "Veg Loaged Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
+    item_name: "Veg Loaged Pizza",
     price: "180",
     btncolor: "error",
     rating: 3,
   },
   {
-    img: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
-    title: "Veg Loaged Pizza",
+    img_url: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
+    item_name: "Veg Loaged Pizza",
     price: "250",
     btncolor: "warning",
     rating: 1,
@@ -67,6 +73,16 @@ const items = [
 ];
 
 const FoodItemsCard = () => {
+  const dispatch = useAppDispatch()
+  const itemsState = useAppSelector(state => state.itemsReducer)
+
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getItems())
+  }, [])
   const [quantities, setQuantities] = useState(() =>
     items.reduce((acc, _, index) => {
       acc[index] = 0;
@@ -90,11 +106,13 @@ const FoodItemsCard = () => {
 
   return (
     <Grid container >
-      {items.map((item, index) => (
+      {itemsState.items.map((item, index) => (
         <Grid
           key={index}
           item
           xs={12}
+          sm={6}
+          md={4}
           lg={3}
           sx={{
             display: "flex",
@@ -102,7 +120,7 @@ const FoodItemsCard = () => {
           }}
         >
           <Card variant="outlined" sx={{ p: 0, width: "100%" }}>
-            <img src={item.img} alt="img" width="100%" height="250px" />
+            <img src={item.img_url} alt="img" width="100%" height="250px" />
             <CardContent
               sx={{
                 display: "flex",
@@ -113,7 +131,7 @@ const FoodItemsCard = () => {
             >
               <div>
                 <Typography variant="h4" sx={{ fontWeight: "500" }}>
-                  {item.title}
+                  {item.item_name}
                 </Typography>
                 <Grid container alignItems="center" justifyContent="space-between">
                   <Grid item>
@@ -159,14 +177,15 @@ const FoodItemsCard = () => {
         </Grid>
       ))}
       <Grid container justifyContent="center">
-        <Grid item 
-        xs={12}
-        lg={12}
+        <Grid item
+          xs={12}
+          lg={12}
         >
           <Button
             variant="contained"
-            sx={{ mt: "25px", width:"100%", height: "60px", fontSize: "1.3rem", fontWeight: "bold" }}
+            sx={{ mt: "25px", width: "100%", height: "60px", fontSize: "1.3rem", fontWeight: "bold" }}
             color="success"
+            onClick={() => navigate("/wow-pizza/cart")}
           >
             Go to Cart
           </Button>

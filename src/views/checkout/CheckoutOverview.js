@@ -11,10 +11,14 @@ import {
 
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { useNavigate } from "react-router-dom";
 
 import CartTable from "./CartTable";
 
+const navigate = useNavigate();
+
 const CheckoutOverview = () => {
+
     return (
         <Card variant="outlined">
             <CardContent>
@@ -58,6 +62,7 @@ const CheckoutOverview = () => {
                             marginRight: "8px",
                         }}
                         color="primary"
+                        onClick={() => navigate("/wow-pizza/food-items")}
                     >
                         <EditSharpIcon sx={{ mr: 1 }} />
                         Edit Order
