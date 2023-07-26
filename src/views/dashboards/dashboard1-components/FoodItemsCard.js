@@ -7,74 +7,10 @@ import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
 
 import { getItems } from "../../../redux/actions/Items";
 
-
-const items = [
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
-    item_name: "Pizza",
-    price: "140",
-    btncolor: "primary",
-    rating: 3,
-  }, {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
-    item_name: "Burger",
-    price: "180",
-    btncolor: "primary",
-    rating: 4,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
-    item_name: "Pizza",
-    price: "250",
-    btncolor: "primary",
-    rating: 1,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/7bd/38f3a8f6ef59e195c0482962f43057bd.jpg",
-    item_name: "Burger",
-    price: "200",
-    btncolor: "primary",
-    rating: 3,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/4c4/61c3337a2054649a6b4e8704670784c4.jpg",
-    item_name: "Burger",
-    price: "210",
-    btncolor: "primary",
-    rating: 5,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/72b/d5bc5b32dd177f5f207cad66556a572b.jpg",
-    item_name: "Veg Loaged Pizza",
-    price: "150",
-    btncolor: "primary",
-    rating: 3,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/ab9/f9973592397676dacb936bf65356aab9.jpg",
-    item_name: "Veg Loaged Pizza",
-    price: "140",
-    btncolor: "primary",
-    rating: 2,
-  }, {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg",
-    item_name: "Veg Loaged Pizza",
-    price: "180",
-    btncolor: "error",
-    rating: 3,
-  },
-  {
-    img_url: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png",
-    item_name: "Veg Loaged Pizza",
-    price: "250",
-    btncolor: "warning",
-    rating: 1,
-  }
-];
-
 const FoodItemsCard = () => {
   const dispatch = useAppDispatch()
   const itemsState = useAppSelector(state => state.itemsReducer)
+  const [items, setItems] = useState([])
 
 
 
@@ -83,6 +19,12 @@ const FoodItemsCard = () => {
   useEffect(() => {
     dispatch(getItems())
   }, [])
+  
+
+  useEffect(() => {
+    setItems(itemsState.items)
+}, [itemsState.items])
+
   const [quantities, setQuantities] = useState(() =>
     items.reduce((acc, _, index) => {
       acc[index] = 0;
@@ -106,7 +48,7 @@ const FoodItemsCard = () => {
 
   return (
     <Grid container >
-      {itemsState.items.map((item, index) => (
+      {items.map((item, index) => (
         <Grid
           key={index}
           item

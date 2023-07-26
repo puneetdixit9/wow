@@ -1,5 +1,6 @@
 import React from "react";
 
+
 import {
   Card,
   CardContent,
@@ -12,11 +13,15 @@ import {
 
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { useNavigate } from "react-router-dom";
 
 import CartTable from "./CartTable";
 
 
 const Cart = () => {
+
+  const navigate = useNavigate()
+
   return (
     <Box>
       <Grid container spacing={0}>
@@ -66,6 +71,7 @@ const Cart = () => {
                     mb: "8px",
                   }}
                   color="primary"
+                  onClick={() => navigate("/wow-pizza/food-items")}
                 >
                   <EditSharpIcon sx={{ mr: 1 }} />
                   Edit Order
