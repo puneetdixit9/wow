@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, Typography, Button, Grid, Rating } from "@mui/material";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
+import { ADD_TO_CART } from '../../../constants'
 
 
-import { getItems } from "../../../redux/actions/Items";
+import { getItems, getCartData } from "../../../redux/actions/Items";
 
 const FoodItemsCard = () => {
   const dispatch = useAppDispatch()
   const itemsState = useAppSelector(state => state.itemsReducer)
   const [items, setItems] = useState([])
+  const [cartData, setCartData] = useState([])
+  const [quantities, setQuantities] = useState()
+  const currentIndex = useRef(-1);
 
 
 
@@ -18,25 +22,63 @@ const FoodItemsCard = () => {
 
   useEffect(() => {
     dispatch(getItems())
+    dispatch(getCartData())
   }, [])
-  
+
 
   useEffect(() => {
     setItems(itemsState.items)
-}, [itemsState.items])
+    setCartData(itemsState.cartData)
+  }, [itemsState.items, itemsState.cartData])
 
-  const [quantities, setQuantities] = useState(() =>
-    items.reduce((acc, _, index) => {
-      acc[index] = 0;
-      return acc;
-    }, {})
-  );
+
+  useEffect(() => {
+    const cartItemMap = cartData.reduce((map, item) => {
+      map[item._id] = item.count;
+      return map;
+    }, {});
+
+    setQuantities(
+      items.map((item) => cartItemMap[item._id] || 0)
+    );
+  }, [items, cartData]);
+
+
+  useEffect(() => {
+    if (currentIndex.current !== -1) {
+      fetch(
+        `${process.env.REACT_APP_API_URL}${ADD_TO_CART}/` +
+        items[currentIndex.current]._id +
+        "/" +
+        quantities[currentIndex.current],
+        {
+          method: "POST",
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Response Data:", data);
+        })
+        .catch((error) => {
+          console.error("Fetch Error:", error);
+        });
+
+    }
+  }, [currentIndex, items, quantities]);
+
 
   const handleAddToCart = (index) => {
+
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [index]: prevQuantities[index] + 1,
     }));
+    currentIndex.current = index
   };
 
   const handleRemoveFromCart = (index) => {
@@ -44,6 +86,7 @@ const FoodItemsCard = () => {
       ...prevQuantities,
       [index]: prevQuantities[index] - 1,
     }));
+    currentIndex.current = index
   };
 
   return (

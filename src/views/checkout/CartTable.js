@@ -12,54 +12,11 @@ import {
     TableRow,
 } from "@mui/material";
 
-const TAX_RATE = 7;
-const TAXES = 220;
-const TOTAL = 500;
-const Items = [
-    {
-        id: "1",
-        name: "Veg-Loaded Pizza",
-        quantity: 2,
-        prize: 290,
-        extra: "",
-        img: "https://b.zmtcdn.com/data/dish_photos/6e9/4fa6a45c982b6fcb2e1ad060e61026e9.jpg"
-    },
-    {
-        id: "2",
-        name: "Farm-House Pizza",
-        quantity: 2,
-        rating: 3,
-        prize: 290,
-        extra: "Cheese",
-        img: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png"
-    },
-    {
-        id: "3",
-        name: "Burger",
-        quantity: 3,
-        prize: 290,
-        img: "https://b.zmtcdn.com/data/dish_photos/7bd/38f3a8f6ef59e195c0482962f43057bd.jpg",
-    },
-    {
-        id: "4",
-        name: "French Fries",
-        quantity: 2,
-        prize: 290,
-        extra: "Double Topping",
-        img: "https://b.zmtcdn.com/data/dish_photos/7df/4938ed937ee5d59241ad94d772c7d7df.png"
-    },
-    {
-        id: "5",
-        name: "Pasta",
-        quantity: 2,
-        prize: 290,
-        extra: "Double Cheese",
-        img: "https://b.zmtcdn.com/data/dish_photos/7bd/38f3a8f6ef59e195c0482962f43057bd.jpg",
-    }
-];
 
+export default function CartTable({items, gstRate}) {
+    const subTotal = items.reduce((acc, item) => acc + item.price * item.count, 0);
+    const gstCharge = subTotal * gstRate / 100
 
-export default function CartTable() {
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="spanning table">
@@ -73,28 +30,28 @@ export default function CartTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Items.map((item) => (
-                        <TableRow key={item.name}>
+                    {items.map((item) => (
+                        <TableRow key={item.item_name}>
                             <TableCell>
                                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                                    <img src={item.img} alt="img" width="10%" height="40px" />
-                                    <Typography sx={{ ml: 2 }}>{item.name}</Typography>
+                                    <img src={item.img_url} alt="img" width="10%" height="40px" />
+                                    <Typography sx={{ ml: 2 }}>{item.item_name}</Typography>
                                 </Box>
                             </TableCell>
-                            <TableCell align="center">{item.quantity}</TableCell>
-                            <TableCell align="center">{item.prize}</TableCell>
-                            <TableCell align="right">{item.prize * item.quantity}</TableCell>
+                            <TableCell align="center">{item.count}</TableCell>
+                            <TableCell align="center">{item.price}</TableCell>
+                            <TableCell align="right">{item.price * item.count}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow>
                         <TableCell rowSpan={3} />
                         <TableCell colSpan={2}>Subtotal</TableCell>
-                        <TableCell align="right">{TOTAL}</TableCell>
+                        <TableCell align="right">{subTotal}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Tax</TableCell>
-                        <TableCell align="right">{`${(TAX_RATE)} %`}</TableCell>
-                        <TableCell align="right">{TAXES}</TableCell>
+                        <TableCell>GST</TableCell>
+                        <TableCell align="right">{`${(gstRate)} %`}</TableCell>
+                        <TableCell align="right">{gstCharge}</TableCell>
                     </TableRow>
                     <TableRow>
 
@@ -111,7 +68,7 @@ export default function CartTable() {
                                 fontSize: "large",
                                 fontWeight: "bold",
                             }}>
-                                {TOTAL}
+                                {subTotal + gstCharge}
                             </Typography>
 
                         </TableCell>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 
 import {
@@ -14,13 +14,48 @@ import {
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
+
+
+import { getCartData, discardCart, proceedToPlaceOrder, resetPreviousPlacedOrder } from "../../redux/actions/Items";
 
 import CartTable from "./CartTable";
 
 
 const Cart = () => {
-
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const cartState = useAppSelector(state => state.itemsReducer)
+  const [cartData, setCartData] = useState([])
+  const [orderPlaced, setOrderPlaced] = useState(false)
+  const [orderId, setOrderId] = useState('')
+  const gstRate = 5;
+
+  useEffect(() => {
+    dispatch(getCartData())
+    dispatch(resetPreviousPlacedOrder())
+  }, [])
+
+
+  useEffect(() => {
+    setCartData(cartState.cartData)
+  }, [cartState.cartData])
+
+  useEffect(() => {
+    if (cartState.orderId !== '') {
+      setOrderPlaced(true)
+      setOrderId(cartState.orderId)
+    }
+  }, [cartState.orderId])
+
+  function handleDiscardCart() {
+    dispatch(discardCart())
+    setCartData([])
+  }
+
+  function handlePlaceOrder() {
+    dispatch(proceedToPlaceOrder())
+  }
 
   return (
     <Box>
@@ -45,13 +80,18 @@ const Cart = () => {
                     }}
                     gutterBottom
                   >
-                    Item(s) in Cart
+                    {orderPlaced? "Order has been successfully placed!": "Item(s) in Cart"}
                   </Typography>
                 </Box>
               </Box>
-              <TableContainer sx={{ overflowX: 'auto' }}>
-                <CartTable />
-              </TableContainer>
+              {/* Conditionally render the TableContainer */}
+              {orderPlaced ? (
+                <Typography variant="h5">Order ID {orderId}</Typography>
+              ) : (
+                <TableContainer sx={{ overflowX: 'auto' }}>
+                  <CartTable items={cartData} gstRate={gstRate} />
+                </TableContainer>
+              )}
               <Box
                 sx={{
                   display: "flex",
@@ -60,50 +100,57 @@ const Cart = () => {
                   flexWrap: "wrap",
                 }}
               >
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "200px",
-                    height: "60px",
-                    fontSize: "1.3rem",
-                    fontWeight: "bold",
-                    marginRight: "8px",
-                    mb: "8px",
-                  }}
-                  color="primary"
-                  onClick={() => navigate("/wow-pizza/food-items")}
-                >
-                  <EditSharpIcon sx={{ mr: 1 }} />
-                  Edit Order
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "350px",
-                    height: "60px",
-                    fontSize: "1.3rem",
-                    fontWeight: "bold",
-                    marginRight: "8px",
-                    mb: "8px",
-                  }}
-                  color="success"
-                >
-                  Place Order
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "200px",
-                    height: "60px",
-                    fontSize: "1.3rem",
-                    fontWeight: "bold",
-                    mb: "8px",
-                  }}
-                  color="warning"
-                >
-                  <ShoppingCartOutlinedIcon sx={{ mr: 1 }} />
-                  Discard Cart
-                </Button>
+                {/* Conditionally render the buttons */}
+                {!orderPlaced && (
+                  <>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "200px",
+                        height: "60px",
+                        fontSize: "1.3rem",
+                        fontWeight: "bold",
+                        marginRight: "8px",
+                        mb: "8px",
+                      }}
+                      color="primary"
+                      onClick={() => navigate("/wow-pizza/food-items")}
+                    >
+                      <EditSharpIcon sx={{ mr: 1 }} />
+                      Edit Order
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "350px",
+                        height: "60px",
+                        fontSize: "1.3rem",
+                        fontWeight: "bold",
+                        marginRight: "8px",
+                        mb: "8px",
+                      }}
+                      color="success"
+                      onClick={handlePlaceOrder}
+                    >
+                      Place Order
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "200px",
+                        height: "60px",
+                        fontSize: "1.3rem",
+                        fontWeight: "bold",
+                        mb: "8px",
+                      }}
+                      color="warning"
+                      onClick={handleDiscardCart}
+                    >
+                      <ShoppingCartOutlinedIcon sx={{ mr: 1 }} />
+                      Discard Cart
+                    </Button>
+                  </>
+                )}
               </Box>
             </CardContent>
           </Card>
