@@ -37,8 +37,7 @@ export const register = payload2 => async dispatch => {
     }
 }
 
-export const password_reset = payload => async dispatch => {
-    console.log('Calling action : password_reset()')
+export const passwordReset = payload => async dispatch => {
     try {
         const response = await apiClient.put(
             CHANGE_PASSWORD,

@@ -32,8 +32,8 @@ const Cart = () => {
   const gstRate = 5;
 
   useEffect(() => {
-    dispatch(getCartData())
     dispatch(resetPreviousPlacedOrder())
+    dispatch(getCartData())
   }, [])
 
 

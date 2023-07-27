@@ -64,8 +64,8 @@ export const proceedToPlaceOrder = () => async dispatch => {
     }
 }
 
-export const resetPreviousPlacedOrder = () => async dispatch => {
-    await dispatch(resetPlaceOrder())
+export const resetPreviousPlacedOrder = () => dispatch => {
+    dispatch(resetPlaceOrder())
 }
 
 export const fetchAllOrders = () => async dispatch => {
