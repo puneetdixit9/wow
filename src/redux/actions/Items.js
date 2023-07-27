@@ -15,6 +15,9 @@ import {
     placeOrderSuccess,
     placeOrderFailed,
     resetPlaceOrder,
+    fetchOrders,
+    fetchOrdersSuccess,
+    fetchOrdersFailed,
 } from '../reducer/Items'
 
 export const getItems = () => async dispatch => {
@@ -63,4 +66,15 @@ export const proceedToPlaceOrder = () => async dispatch => {
 
 export const resetPreviousPlacedOrder = () => async dispatch => {
     await dispatch(resetPlaceOrder())
+}
+
+export const fetchAllOrders = () => async dispatch => {
+    await dispatch(fetchOrders())
+    try {
+        const response = await apiClient.get(`${ORDER}`)
+
+        return dispatch(fetchOrdersSuccess(response.data))
+    } catch (err) {
+        return dispatch(fetchOrdersFailed(err))
+    }
 }

@@ -11,6 +11,16 @@ import {
 
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
+
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
+import DoneIcon from '@mui/icons-material/Done';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import CancelIcon from '@mui/icons-material/Cancel';
+import TaskIcon from '@mui/icons-material/Task';
+
+
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
@@ -21,50 +31,37 @@ import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 
 const options = ["Action", "Another Action", "Something else here"];
 
-const orders = [
-  {
-    time: "09.50",
-    color: "success.main",
-    text: "Margrita Small, 2x Burger",
-  },
-  {
-    time: "09.46",
-    color: "secondary.main",
-    text: "French Fries Small, 2x Veg-Loaded Pizza Medium",
-  },
-  {
-    time: "09.47",
-    color: "primary.main",
-    text: "Crispy Veg Burger",
-  },
-  {
-    time: "09.48",
-    color: "warning.main",
-    text: "New Sale recorded #ML-3467",
-  },
-  {
-    time: "09.49",
-    color: "error.main",
-    text: "Payment was made of $64.95 to Michael Anderson",
-  },
-  {
-    time: "09.47",
-    color: "primary.main",
-    text: "Crispy Veg Burger",
-  },
-  {
-    time: "09.48",
-    color: "warning.main",
-    text: "New Sale recorded #ML-3467",
-  },
-  {
-    time: "09.49",
-    color: "error.main",
-    text: "Payment was made of $64.95 to Michael Anderson",
-  },
-];
+const iconMap = {
+  placed: <TaskIcon />,
+  cancelByCustomer: <CancelIcon />,
+  inKitchen: <LocalFireDepartmentRoundedIcon />,
+  prepared: <DoneIcon />,
+  inDelivery: <DeliveryDiningIcon />,
+  allDone: <DoneAllIcon />,
+  cancelByStore: <CancelOutlinedIcon />
+};
 
-const PendingOrders = () => {
+
+const PendingOrders = ({ orders }) => {
+
+
+  const timeFormatter = (deteTimeString) => {
+
+    const date = new Date(deteTimeString);
+
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const amOrPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = (hours % 12) || 12;
+    return `${formattedHours < 10 ? "0" : ""}${formattedHours}:${minutes} ${amOrPm}`;
+
+  };
+
+  const generateOrderSummaryText = (items) => {
+    return items.map((item) => `${item.count}x ${item.item_name}`).join(', ');
+  };
+
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -103,7 +100,7 @@ const PendingOrders = () => {
             >
               Pending Orders
             </Typography>
-            <Typography
+            {/* <Typography
               color="textSecondary"
               variant="body1"
               sx={{
@@ -112,9 +109,9 @@ const PendingOrders = () => {
               }}
             >
               Overview of Years
-            </Typography>
+            </Typography> */}
           </Box>
-          <Box
+          {/* <Box
             sx={{
               marginLeft: "auto",
             }}
@@ -153,17 +150,18 @@ const PendingOrders = () => {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
         </Box>
         <Timeline
           sx={{
             p: 0,
-            maxHeight: 350,
+            minHeight: 370,
+            maxHeight: 370,
             overflowY: "auto",
           }}
         >
           {orders.map((order) => (
-            <TimelineItem key={order.time}>
+            <TimelineItem key={order.placed_at}>
               <TimelineOppositeContent
                 sx={{
                   fontSize: "12px",
@@ -171,15 +169,16 @@ const PendingOrders = () => {
                   flex: "0",
                 }}
               >
-                {order.time}
+                {timeFormatter(order.placed_at)}
               </TimelineOppositeContent>
               <TimelineSeparator>
-                <TimelineDot
+                {/* <TimelineDot
                   variant="outlined"
                   sx={{
-                    borderColor: order.color,
+                    borderColor: order.status,
                   }}
-                />
+                /> */}
+                {iconMap[order.status]}
                 <TimelineConnector />
               </TimelineSeparator>
               <TimelineContent
@@ -188,7 +187,15 @@ const PendingOrders = () => {
                   fontSize: "14px",
                 }}
               >
-                {order.text}
+                <Typography variant="body2" component="div">
+                  {generateOrderSummaryText(order.items)}
+                </Typography>
+                <Typography variant="body2" component="div">
+                  <Typography variant="body2" sx={{ fontWeight: "bold", display: "inline" }}>
+                    Note:
+                  </Typography>{" "}
+                  Some data
+                </Typography>
               </TimelineContent>
             </TimelineItem>
           ))}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 
 import {
@@ -80,19 +80,20 @@ const Cart = () => {
                     }}
                     gutterBottom
                   >
-                    {orderPlaced? "Order has been successfully placed!": "Item(s) in Cart"}
+                    {orderPlaced ? "Order has been placed successfully!" : cartData.length ? "Item(s) in Cart" : "Your cart is empty!"}
                   </Typography>
                 </Box>
               </Box>
               {/* Conditionally render the TableContainer */}
               {orderPlaced ? (
-                <Typography variant="h5">Order ID {orderId}</Typography>
-              ) : (
+                <Typography variant="h5">Order ID: {orderId}</Typography>
+              ) : cartData.length ? (
                 <TableContainer sx={{ overflowX: 'auto' }}>
                   <CartTable items={cartData} gstRate={gstRate} />
                 </TableContainer>
-              )}
-              <Box
+              ) : null
+              }
+             <Box
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -103,52 +104,73 @@ const Cart = () => {
                 {/* Conditionally render the buttons */}
                 {!orderPlaced && (
                   <>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        width: "200px",
-                        height: "60px",
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        marginRight: "8px",
-                        mb: "8px",
-                      }}
-                      color="primary"
-                      onClick={() => navigate("/wow-pizza/food-items")}
-                    >
-                      <EditSharpIcon sx={{ mr: 1 }} />
-                      Edit Order
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        width: "350px",
-                        height: "60px",
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        marginRight: "8px",
-                        mb: "8px",
-                      }}
-                      color="success"
-                      onClick={handlePlaceOrder}
-                    >
-                      Place Order
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        width: "200px",
-                        height: "60px",
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        mb: "8px",
-                      }}
-                      color="warning"
-                      onClick={handleDiscardCart}
-                    >
-                      <ShoppingCartOutlinedIcon sx={{ mr: 1 }} />
-                      Discard Cart
-                    </Button>
+                    {cartData.length > 0 && (
+                      <>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "200px",
+                            height: "60px",
+                            fontSize: "1.3rem",
+                            fontWeight: "bold",
+                            marginRight: "8px",
+                            mb: "8px",
+                          }}
+                          color="primary"
+                          onClick={() => navigate("/wow-pizza/food-items")}
+                        >
+                          <EditSharpIcon sx={{ mr: 1 }} />
+                          Edit Order
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "350px",
+                            height: "60px",
+                            fontSize: "1.3rem",
+                            fontWeight: "bold",
+                            marginRight: "8px",
+                            mb: "8px",
+                          }}
+                          color="success"
+                          onClick={handlePlaceOrder}
+                        >
+                          Place Order
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "200px",
+                            height: "60px",
+                            fontSize: "1.3rem",
+                            fontWeight: "bold",
+                            mb: "8px",
+                          }}
+                          color="warning"
+                          onClick={handleDiscardCart}
+                        >
+                          <ShoppingCartOutlinedIcon sx={{ mr: 1 }} />
+                          Discard Cart
+                        </Button>
+                      </>
+                    )}
+                    {cartData.length === 0 && (
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: "350px",
+                          height: "60px",
+                          fontSize: "1.3rem",
+                          fontWeight: "bold",
+                          marginRight: "8px",
+                          mb: "8px",
+                        }}
+                        color="success"
+                        onClick={() => navigate("/wow-pizza/food-items")}
+                      >
+                        Check Food Items
+                      </Button>
+                    )}
                   </>
                 )}
               </Box>

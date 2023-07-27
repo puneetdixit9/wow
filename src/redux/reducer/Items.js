@@ -5,9 +5,11 @@ const initialState = {
     isCartDataLoading: false,
     isDiscardCartDataLoading: false,
     isPlaceOrderLoading: false,
+    isFetchOrdersLoading: false,
     items: [],
     cartData: [],
     orderId: '',
+    orders: [],
     message: '',
     isError: false,
 }
@@ -112,7 +114,30 @@ export const itemsReducer = createSlice({
                 ...state,
                 orderId: '',
             }
-        }
+        },
+        fetchOrders(state, action) {
+            return {
+                ...state,
+                isError: false,
+                isFetchOrdersLoading: true,
+            }
+        },
+        fetchOrdersSuccess(state, action) {
+            return {
+                ...state,
+                isFetchOrdersLoading: false,
+                orders: action?.payload,
+                isError: false,
+            }
+        },
+        fetchOrdersFailed(state, action) {
+            return {
+                ...state,
+                message: 'Fetch Order Failed',
+                isError: true,
+                isFetchOrdersLoading: false,
+            }
+        },
     },
 })
 
@@ -130,6 +155,9 @@ export const {
     placeOrderSuccess,
     placeOrderFailed,
     resetPlaceOrder,
+    fetchOrders,
+    fetchOrdersSuccess,
+    fetchOrdersFailed,
 } = itemsReducer.actions
 
 export default itemsReducer.reducer
