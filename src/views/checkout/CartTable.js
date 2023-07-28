@@ -19,7 +19,7 @@ export default function CartTable({items, gstRate}) {
 
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+            <Table aria-label="spanning table">
                 <TableHead>
                     
                     <TableRow>

@@ -134,7 +134,7 @@ const SignUpForm = () => {
                         <Typography
                             sx={{
                                 fontSize: "18px",
-                                fontWeight: "500",
+                                fontWeight: "800",
                             }}
                         >
                             Sign-Up

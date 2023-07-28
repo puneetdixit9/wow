@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography, useMediaQuery } from "@mui/material";
 import { SignUpForm, LoginForm, OtpForm } from "./fb-elements/index";
+import LogoIcon from "../../layouts/FullLayout/Logo/LogoIcon";
 
 const FormLayouts = ({ form }) => {
   const images = [
@@ -23,8 +24,11 @@ const FormLayouts = ({ form }) => {
   }, [images]);
 
   return (
-    <Grid container spacing={0} justifyContent={"flex-end"}>
+    <Grid container spacing={0} justifyContent="center" sx={{ minHeight: "100vh" }}>
       <Grid item lg={4} md={6} xs={12} sx={{ textAlign: "center", marginTop: "50px" }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3 , mt:-4}}>
+          <LogoIcon height={"230px"} width={"700px"}/>
+        </Box>
         {form === "signup" && <SignUpForm />}
         {form === "login" && <LoginForm />}
         {form === "otp" && <OtpForm />}
@@ -36,7 +40,7 @@ const FormLayouts = ({ form }) => {
             backgroundImage: `url(${images[currentImageIndex]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: "96vh",
+            height: "calc(100vh - 100px)", // Adjust the height here to leave space for the logo and margin
             borderRadius: "20px",
             transition: "background-image 1s ease-in-out",
           }}
