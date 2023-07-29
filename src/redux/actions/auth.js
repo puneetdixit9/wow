@@ -7,12 +7,12 @@ import {
     fetchRegister,
     fetchRegisterSuccess,
     fetchRegisterFailed,
-    submitOtp,
-    submitOtpSuccess,
-    submitOtpFailed,
+    sendOtp,
+    sendOtpSuccess,
+    sendOtpFailed,
 } from '../reducer/auth'
 import apiClient from '../../services/apiClient'
-import { CHANGE_PASSWORD, LOGIN_API, REGISTER_API } from '../../constants'
+import { CHANGE_PASSWORD, LOGIN_API, REGISTER_API, SEND_OTP } from '../../constants'
 
 const globalConfig = {
     retry: 3,
@@ -55,20 +55,21 @@ export const passwordReset = (payload) => async dispatch => {
     }
 }
 
+
+export const sendOtpToPhone = (payload) => async dispatch => {
+    console.log('Calling action --------> : sendOtp()', payload)
+    await dispatch(sendOtp())
+    try {
+        const response = await apiClient.post(
+            SEND_OTP,
+            payload,
+        )
+        return dispatch(sendOtpSuccess(response))
+    } catch (err) {
+        return dispatch(sendOtpFailed(err))
+    }
+}
+
 export const resetOtpErr = () => dispatch => {
     return dispatch(resetOtpError())
 }
-
-// export const submitAndVerifyOtp = (payload) => async dispatch => {
-//     console.log('Calling action : passwordReset()')
-//     try {
-//         const response = await apiClient.put(
-//             CHANGE_PASSWORD,
-//             payload,
-//             globalConfig,
-//         )
-//         return dispatch(fetchRegisterSuccess(response))
-//     } catch (err) {
-//         return dispatch(fetchRegisterFailed(err))
-//     }
-// }

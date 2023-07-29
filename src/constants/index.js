@@ -2,6 +2,7 @@ export const LOGIN_API = '/wow/auth/login'
 export const REGISTER_API = '/wow/auth/signup'
 export const CHANGE_PASSWORD = '/wow/auth/change_password'
 export const REFREST_TOKEN = '/wow/auth/refresh'
+export const SEND_OTP = '/wow/auth/otp'
 
 export const ITEMS = '/wow/items'
 export const CART = '/wow/cart-data'

@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
+import { sendOtpToPhone, resetOtpErr, login } from "../../../redux/actions/auth";
 
 import {
     Card,
@@ -9,11 +12,78 @@ import {
     TextField,
     Button,
     InputAdornment,
+    CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const LoginForm = () => {
     const countryCode = "+91";
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const authReducerState = useAppSelector(state => state.authReducer)
+    const [phoneNumber, setPhoneNUmber] = useState("");
+    const [sendOtpError, setSendOtpError] = useState("");
+    const [clickedButton, setClickedButton] = useState("");
+    const [emailLoginData, setEmailLoginData] = useState({
+        email: "",
+        password: ""
+    })
+    const [emailError, setEmailError] = useState("")
+    const [passwordError, setPasswordError] = useState("")
+    const [loginError, setloginError] = useState("")
+
+    const handleLoginDataValue = (event) => {
+        const { name, value } = event.target;
+        if (name === "email") {
+            setEmailError("")
+        } else {
+            setPasswordError("")
+        }
+        setEmailLoginData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    }
+
+    const handleLoginWithPhone = () => {
+        setClickedButton("phone")
+        const payload = {
+            phone: countryCode + phoneNumber
+        }
+        dispatch(sendOtpToPhone(payload))
+    }
+
+    const handleLoginWithEmail = () => {
+        setClickedButton("email")
+        if (!emailLoginData.email.length) {
+            setEmailError("Email required for this login")
+        }
+        if (!emailLoginData.password.length) {
+            setPasswordError("Password required for this login")
+        }
+        dispatch(login(emailLoginData));
+    }
+
+    useEffect(() => {
+        setloginError(authReducerState.loginError?.error || "")
+        if (emailLoginData.email.length && authReducerState.loginSuccess) {
+            dispatch(resetOtpErr())
+            navigate("/wow-pizza/dashboard")
+        }
+    }, [authReducerState.loginError, authReducerState.loginSuccess])
+
+    const handlePhoneNumberChange = (event) => {
+        setSendOtpError("")
+        setPhoneNUmber(event.target.value)
+    }
+
+    useEffect(() => {
+        setSendOtpError(authReducerState.sendOtpError?.error)
+        if (!Object.keys(authReducerState.sendOtpError).length && !authReducerState.sendingOtp) {
+            dispatch(resetOtpErr())
+            navigate("/wow-pizza/otp/" + countryCode + phoneNumber)
+        }
+    }, [authReducerState.sendOtpError])
 
     return (
         <div>
@@ -72,6 +142,7 @@ const LoginForm = () => {
                             sx={{
                                 mb: 2,
                             }}
+                            value={phoneNumber}
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">{countryCode}</InputAdornment>,
                                 inputProps: {
@@ -79,10 +150,22 @@ const LoginForm = () => {
                                     inputMode: "numeric",
                                 },
                             }}
+                            onChange={handlePhoneNumberChange}
+                            error={sendOtpError?.length}
+                            helperText={sendOtpError}
                         />
                         <Box sx={{ mb: 2 }}>
-                            <Button color="secondary" variant="contained" sx={{width: 180}}>
-                                Login with OTP
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                sx={{ width: 180 }}
+                                onClick={handleLoginWithPhone}
+                            >
+                                {authReducerState.isLoading && clickedButton === "phone" ? (
+                                    <CircularProgress color="inherit" size={25} />
+                                ) : (
+                                    "Login with Phone"
+                                )}
                             </Button>
                         </Box>
                         OR
@@ -92,6 +175,10 @@ const LoginForm = () => {
                             type="email"
                             variant="outlined"
                             fullWidth
+                            onChange={handleLoginDataValue}
+                            name="email"
+                            error={emailError?.length}
+                            helperText={emailError}
                             sx={{
                                 mt: 2,
                                 mb: 2,
@@ -105,13 +192,35 @@ const LoginForm = () => {
                             autoComplete="current-password"
                             variant="outlined"
                             fullWidth
+                            name="password"
+                            error={passwordError?.length}
+                            helperText={passwordError}
+                            onChange={handleLoginDataValue}
                             sx={{
                                 mb: 2,
                             }}
                         />
-
-                        <Button color="success" variant="contained" sx={{ mb: 1, width: 180 }}>
-                            Login to your account
+                        <Typography
+                            component="div"
+                            sx={{
+                                display: "block",
+                                mb: loginError.length ? 1 : 0,
+                                color: "red"
+                            }}
+                        >
+                            {loginError}
+                        </Typography>
+                        <Button
+                            color="success"
+                            variant="contained"
+                            sx={{ mb: 1, width: 180 }}
+                            onClick={handleLoginWithEmail}
+                        >
+                            {authReducerState.isLoading && clickedButton === "email" ? (
+                                <CircularProgress color="inherit" size={25} />
+                            ) : (
+                                "Login with Email"
+                            )}
                         </Button>
                         <Typography component="div" sx={{ display: "block" }}>
                             Don't have an Account?

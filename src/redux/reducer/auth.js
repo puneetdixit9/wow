@@ -6,8 +6,11 @@ const initialState = {
     user: null,
     isLoading: false,
     signupError: {},
+    loginSuccess: false,
     loginError: {},
-    otpError: true,
+    sendOtpError: {},
+    sendingOtp: true,
+    otpVerifyError: true,
 }
 export const authReducer = createSlice({
     name: 'auth',
@@ -18,6 +21,7 @@ export const authReducer = createSlice({
                 ...state,
                 isLoading: true,
                 loginError: {},
+                loginSuccess: false,
             }
         },
         fetchLoginSuccess(state, action) {
@@ -26,21 +30,24 @@ export const authReducer = createSlice({
                 ...state,
                 message: 'Login Successfull',
                 isLoading: false,
-                otpError: false,
+                otpVerifyError: false,
+                loginSuccess: true,
             }
         },
         fetchLoginFailed(state, action) {
             return {
                 ...state,
                 isLoading: false,
+                loginSuccess: false,
                 loginError: action.payload.response.data
             }
         },
         resetOtpError(state, action) {
             return {
                 ...state,
-                otpError: true,
-                
+                otpVerifyError: true,
+                sendingOtp: true,
+                loginSuccess: false,
             }
         },
         fetchRegister(state, action) {
@@ -63,24 +70,28 @@ export const authReducer = createSlice({
                 signupError: action?.payload?.response?.data,
             }
         },
-        submitOtp(state, action) {
+        sendOtp(state, action) {
             return {
                 ...state,
                 isLoading: true,
-                signupError: {}
+                sendOtpError: {},
+                sendingOtp: true,
             }
         },
-        submitOtpSuccess(state, action) {
+        sendOtpSuccess(state, action) {
             return {
                 ...state,
                 isLoading: false,
+                sendOtpError: {},
+                sendingOtp: false
             }
         },
-        submitOtpFailed(state, action) {
+        sendOtpFailed(state, action) {
             return {
                 ...state,
                 isLoading: false,
-                loginError: action?.payload?.response?.data,
+                sendingOtp: true,
+                sendOtpError: action?.payload?.response?.data,
             }
         },
     },
@@ -93,9 +104,9 @@ export const {
     fetchRegister,
     fetchRegisterSuccess,
     fetchRegisterFailed,
-    submitOtp,
-    submitOtpSuccess,
-    submitOtpFailed,
+    sendOtp,
+    sendOtpSuccess,
+    sendOtpFailed,
     resetOtpError,
 } = authReducer.actions
 

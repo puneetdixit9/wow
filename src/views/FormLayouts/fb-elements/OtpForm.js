@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Card, CardContent, Divider, Box, Typography, Button, Grid, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
-import { login, resetOtpErr } from "../../../redux/actions/auth";
+import { login, resetOtpErr, sendOtpToPhone } from "../../../redux/actions/auth";
 
 const OtpForm = () => {
   const navigate = useNavigate()
@@ -14,6 +14,7 @@ const OtpForm = () => {
   const otpLength = 6;
   const [otpValue, setOtpValue] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     dispatch(resetOtpErr())
@@ -28,7 +29,6 @@ const OtpForm = () => {
       inputs.current[index + 1].focus();
     }
 
-    // Concatenate all OTP input values into a single string
     let otpString = "";
     inputs.current.forEach((input) => {
       otpString += input.value;
@@ -45,12 +45,25 @@ const OtpForm = () => {
     dispatch(login(payload));
   }
 
+  const handleResendOtp = () => {
+    const payload = {
+      phone: phoneNumber
+    }
+    dispatch(sendOtpToPhone(payload));
+  }
+
+  useEffect(() => {
+    if (otpValue.length === 6 && buttonRef.current) {
+      buttonRef.current.click();
+    }
+  }, [otpValue]);
+
   useEffect(() => {
     setErrorMsg(authReducerState.loginError?.error)
-    if (otpValue.length && !authReducerState.otpError) {
+    if (otpValue.length && !authReducerState.otpVerifyError) {
       navigate("/wow-pizza/dashboard")
     }
-  }, [authReducerState.loginError, authReducerState.otpError])
+  }, [authReducerState.loginError, authReducerState.otpVerifyError])
 
   return (
     <div>
@@ -122,8 +135,17 @@ const OtpForm = () => {
             <Box sx={{ textAlign: "center", mt: 2 }}>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item>
-                  <Button color="primary" variant="contained" sx={{ width: 140 }}>
-                    Resend OTP
+                  <Button 
+                  color="primary" 
+                  variant="contained" 
+                  sx={{ width: 140 }}
+                  onClick={handleResendOtp}
+                  >
+                    {authReducerState.isLoading ? (
+                      <CircularProgress color="inherit" size={25} />
+                    ) : (
+                      "Resend OTP"
+                    )}
                   </Button>
                 </Grid>
                 <Grid item>
@@ -131,17 +153,15 @@ const OtpForm = () => {
                     color="success"
                     variant="contained"
                     sx={{ width: 140 }}
-                    onClick={handleSubmitOtp}>
+                    ref={buttonRef}
+                    onClick={handleSubmitOtp}
+                    disabled={!otpValue.length}
+                    >
                     {authReducerState.isLoading ? (
                       <CircularProgress color="inherit" size={25} />
                     ) : (
                       "Verify OTP"
                     )}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button color="secondary" variant="contained" sx={{ width: 140 }}>
-                    Change Number
                   </Button>
                 </Grid>
               </Grid>
