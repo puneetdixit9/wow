@@ -1,5 +1,5 @@
 import React from "react";
-//import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
@@ -24,6 +24,7 @@ import {
 import userimg from "../../../assets/images/users/user.jpg";
 
 const Header = (props) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -55,6 +56,10 @@ const Header = (props) => {
   const handleClose5 = () => {
     setAnchorEl5(null);
   };
+
+  const handleLogout = () => {
+    navigate("/wow-pizza/login")
+  }
 
   return (
     <AppBar sx={props.sx} elevation={0} className={props.customClass}>
@@ -145,10 +150,6 @@ const Header = (props) => {
           </MenuItem>
         </Menu>
         <Box flexGrow={1} />
-
-        {/* ------------------------------------------- */}
-        {/* Notifications Dropdown */}
-        {/* ------------------------------------------- */}
         <IconButton
           aria-label="menu"
           color="inherit"
@@ -178,12 +179,6 @@ const Header = (props) => {
           <MenuItem onClick={handleClose}>Action Else</MenuItem>
           <MenuItem onClick={handleClose}>Another Action</MenuItem>
         </Menu>
-        {/* ------------------------------------------- */}
-        {/* End Notifications Dropdown */}
-        {/* ------------------------------------------- */}
-        {/* ------------------------------------------- */}
-        {/* Profile Dropdown */}
-        {/* ------------------------------------------- */}
         <Box
           sx={{
             width: "1px",
@@ -259,7 +254,7 @@ const Header = (props) => {
             </ListItemIcon>
             Settings
           </MenuItem>
-          <MenuItem onClick={handleClose4}>
+          <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <LogoutOutlinedIcon fontSize="small" />
             </ListItemIcon>
