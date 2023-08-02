@@ -10,9 +10,10 @@ import {
   SalesOverview,
   ProductPerformance,
   PendingOrders,
-} from "./dashboard1-components";
+} from "../dashboards/dashboard1-components";
 
-const Dashboard1 = () => {
+
+const Orders = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const reducerState = useAppSelector(state => state.itemsReducer)
@@ -31,17 +32,12 @@ const Dashboard1 = () => {
     <Box>
       <Grid container spacing={0}>
         <Grid item xs={12} lg={12}>
-          <SalesOverview />
-        </Grid>
-        <Grid item xs={12} lg={6}>
-          <PendingOrders orders={orders} maxMinHeight={[370, 370]}/>
-        </Grid>
-        <Grid item xs={12} lg={6}>
-          <ProductPerformance />
+          <PendingOrders orders={orders}/>
+          <PendingOrders orders={orders}/>
         </Grid>
       </Grid>
     </Box>
   );
 };
 
-export default Dashboard1;
+export default Orders;

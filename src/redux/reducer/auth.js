@@ -11,6 +11,7 @@ const initialState = {
     sendOtpError: {},
     sendingOtp: true,
     otpVerifyError: true,
+    userInfo: {},
 }
 export const authReducer = createSlice({
     name: 'auth',
@@ -48,6 +49,7 @@ export const authReducer = createSlice({
                 otpVerifyError: true,
                 sendingOtp: true,
                 loginSuccess: false,
+                loginError: {},
             }
         },
         fetchRegister(state, action) {
@@ -94,6 +96,25 @@ export const authReducer = createSlice({
                 sendOtpError: action?.payload?.response?.data,
             }
         },
+        fetchUserInfo(state, action) {
+            return {
+                ...state,
+                isLoading: true,
+            }
+        },
+        fetchUserInfoSuccess(state, action) {
+            return {
+                ...state,
+                isLoading: false,
+                userInfo: action.payload.data,
+            }
+        },
+        fetchUserInfoFailed(state, action) {
+            return {
+                ...state,
+                isLoading: false,
+            }
+        },
     },
 })
 
@@ -108,6 +129,9 @@ export const {
     sendOtpSuccess,
     sendOtpFailed,
     resetOtpError,
+    fetchUserInfo,
+    fetchUserInfoSuccess,
+    fetchUserInfoFailed,
 } = authReducer.actions
 
 export default authReducer.reducer

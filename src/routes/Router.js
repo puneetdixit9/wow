@@ -11,17 +11,19 @@ import ExSlider from "../views/FormElements/ExSlider.js";
 import ExSwitch from "../views/FormElements/ExSwitch.js";
 import FormLayouts from "../views/FormLayouts/FormLayouts.js";
 import Inventory from "../views/inventory/Inventory.js";
+import Orders from "../views/orders/Orders.js";
 
 const ThemeRoutes = [
   {
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="wow-pizza/dashboard" /> },
-      { path: "wow-pizza/dashboard", exact: true, element: <Dashboard1 /> },
+      { path: "/", element: <Navigate to="/wow-pizza/dashboard" /> },
+      { path: "/wow-pizza/dashboard", exact: true, element: <Dashboard1 /> },
       { path: "/wow-pizza/food-items", element: <ExAutoComplete /> },
       { path: "/wow-pizza/cart", element: <Checkout /> },
       { path: "/wow-pizza/inventory", element: <Inventory /> },
+      { path: "/wow-pizza/orders", element: <Orders /> },
       { path: "tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts/form-layouts", element: <FormLayouts /> },
       { path: "/form-elements/checkbox", element: <ExCheckbox /> },

@@ -9,6 +9,7 @@ import {
   Grid,
   Button,
   TableContainer,
+  TextField,
 } from "@mui/material";
 
 import EditSharpIcon from '@mui/icons-material/EditSharp';
@@ -30,12 +31,18 @@ const Cart = () => {
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState('')
   const gstRate = 5;
+  const [orderNote, setOrderNote] = useState('')
 
   useEffect(() => {
     dispatch(resetPreviousPlacedOrder())
     dispatch(getCartData())
   }, [])
 
+  const handleOrderNoteChange = (event) => {
+    console.log("--------> 1", orderNote)
+    setOrderNote(event.target.value);
+    console.log("--------> ", orderNote)
+  };
 
   useEffect(() => {
     setCartData(cartState.cartData)
@@ -54,7 +61,10 @@ const Cart = () => {
   }
 
   function handlePlaceOrder() {
-    dispatch(proceedToPlaceOrder())
+    const payload = {
+      order_note: orderNote
+    }
+    dispatch(proceedToPlaceOrder(payload))
   }
 
   return (
@@ -84,7 +94,6 @@ const Cart = () => {
                   </Typography>
                 </Box>
               </Box>
-              {/* Conditionally render the TableContainer */}
               {orderPlaced ? (
                 <Typography variant="h5">Order ID: {orderId}</Typography>
               ) : cartData.length ? (
@@ -93,7 +102,7 @@ const Cart = () => {
                 </TableContainer>
               ) : null
               }
-             <Box
+              <Box
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -101,11 +110,19 @@ const Cart = () => {
                   flexWrap: "wrap",
                 }}
               >
-                {/* Conditionally render the buttons */}
                 {!orderPlaced && (
                   <>
                     {cartData.length > 0 && (
                       <>
+                        <TextField
+                          id="default-value"
+                          label="Order Note"
+                          variant="outlined"
+                          fullWidth
+                          sx={{ mb: 2 }}
+                          value={orderNote}
+                          onChange={handleOrderNoteChange}
+                        />
                         <Button
                           variant="contained"
                           sx={{

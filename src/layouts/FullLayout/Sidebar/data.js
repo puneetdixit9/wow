@@ -32,11 +32,11 @@ const Menuitems = [
     icon: InventoryIcon,
     href: "/wow-pizza/inventory",
   },
-  // {
-  //   title: "Buttons",
-  //   icon: AspectRatioOutlinedIcon,
-  //   href: "/wow-pizza/inventory",
-  // },
+  {
+    title: "Orders",
+    icon: AspectRatioOutlinedIcon,
+    href: "/wow-pizza/orders",
+  },
   // {
   //   title: "Checkbox",
   //   icon: AssignmentTurnedInOutlinedIcon,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
@@ -7,6 +7,10 @@ import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+
+
+import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
+import { fetchUserInformation } from "../../../redux/actions/auth";
 
 import {
   AppBar,
@@ -21,11 +25,22 @@ import {
   ListItemIcon,
 } from "@mui/material";
 
-import userimg from "../../../assets/images/users/user.jpg";
+// import userimg from "../../../assets/images/users/user.jpg";
 
 const Header = (props) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const authReducerState = useAppSelector(state => state.authReducer)
+  const [userInfo, setUserInfo] = useState({})
+
+  useEffect(() => {
+    dispatch(fetchUserInformation())
+  }, [])
+
+  useEffect(() => {
+    setUserInfo(authReducerState.userInfo)
+  }, [authReducerState.userInfo])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,14 +72,17 @@ const Header = (props) => {
     setAnchorEl5(null);
   };
 
+
+
   const handleLogout = () => {
+    localStorage.removeItem("user")
     navigate("/wow-pizza/login")
   }
 
   return (
     <AppBar sx={props.sx} elevation={0} className={props.customClass}>
       <Toolbar>
-        <IconButton
+        {/* <IconButton
           color="inherit"
           aria-label="menu"
           onClick={props.toggleMobileSidebar}
@@ -148,7 +166,8 @@ const Header = (props) => {
               New Component
             </Box>
           </MenuItem>
-        </Menu>
+        </Menu> */}
+        Last Login:  {userInfo.last_login_time}
         <Box flexGrow={1} />
         <IconButton
           aria-label="menu"
@@ -179,6 +198,7 @@ const Header = (props) => {
           <MenuItem onClick={handleClose}>Action Else</MenuItem>
           <MenuItem onClick={handleClose}>Another Action</MenuItem>
         </Menu>
+        Hi, {userInfo.first_name}
         <Box
           sx={{
             width: "1px",
@@ -201,8 +221,8 @@ const Header = (props) => {
             }}
           >
             <Avatar
-              src={userimg}
-              alt={userimg}
+              // src={userimg}
+              // alt={userimg}
               sx={{
                 width: "30px",
                 height: "30px",

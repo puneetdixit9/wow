@@ -53,10 +53,10 @@ export const discardCart = () => async dispatch => {
     }
 }
 
-export const proceedToPlaceOrder = () => async dispatch => {
+export const proceedToPlaceOrder = (payload) => async dispatch => {
     await dispatch(placeOrder())
     try {
-        const response = await apiClient.post(`${ORDER}`)
+        const response = await apiClient.post(ORDER, payload)
 
         return dispatch(placeOrderSuccess(response.data))
     } catch (err) {

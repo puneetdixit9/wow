@@ -42,7 +42,7 @@ const iconMap = {
 };
 
 
-const PendingOrders = ({ orders }) => {
+const PendingOrders = ({ orders, maxMinHeight }) => {
 
 
   const timeFormatter = (deteTimeString) => {
@@ -155,8 +155,8 @@ const PendingOrders = ({ orders }) => {
         <Timeline
           sx={{
             p: 0,
-            minHeight: 370,
-            maxHeight: 370,
+            minHeight: maxMinHeight ? maxMinHeight[0] : 580,
+            maxHeight: maxMinHeight ? maxMinHeight[1] : 580,
             overflowY: "auto",
           }}
         >
@@ -194,7 +194,7 @@ const PendingOrders = ({ orders }) => {
                   <Typography variant="body2" sx={{ fontWeight: "bold", display: "inline" }}>
                     Note:
                   </Typography>{" "}
-                  Some data
+                  {order.order_note}
                 </Typography>
               </TimelineContent>
             </TimelineItem>
