@@ -82,7 +82,7 @@ const Header = (props) => {
   return (
     <AppBar sx={props.sx} elevation={0} className={props.customClass}>
       <Toolbar>
-        {/* <IconButton
+        <IconButton
           color="inherit"
           aria-label="menu"
           onClick={props.toggleMobileSidebar}
@@ -95,7 +95,7 @@ const Header = (props) => {
         >
           <MenuOutlinedIcon width="20" height="20" />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           aria-label="menu"
           color="inherit"
           aria-controls="dd-menu"

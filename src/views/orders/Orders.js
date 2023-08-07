@@ -33,7 +33,6 @@ const Orders = () => {
       <Grid container spacing={0}>
         <Grid item xs={12} lg={12}>
           <PendingOrders orders={orders}/>
-          <PendingOrders orders={orders}/>
         </Grid>
       </Grid>
     </Box>

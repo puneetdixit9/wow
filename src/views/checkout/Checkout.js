@@ -14,6 +14,7 @@ import {
 
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
 
@@ -36,16 +37,17 @@ const Cart = () => {
   useEffect(() => {
     dispatch(resetPreviousPlacedOrder())
     dispatch(getCartData())
+    console.log("-------> 1")
   }, [])
 
   const handleOrderNoteChange = (event) => {
-    console.log("--------> 1", orderNote)
     setOrderNote(event.target.value);
-    console.log("--------> ", orderNote)
+    console.log("-------> 2")
   };
 
   useEffect(() => {
     setCartData(cartState.cartData)
+    console.log("-------> 3")
   }, [cartState.cartData])
 
   useEffect(() => {
@@ -53,18 +55,31 @@ const Cart = () => {
       setOrderPlaced(true)
       setOrderId(cartState.orderId)
     }
+    console.log("-------> 4")
   }, [cartState.orderId])
 
   function handleDiscardCart() {
     dispatch(discardCart())
     setCartData([])
+    console.log("-------> 5")
   }
 
-  function handlePlaceOrder() {
+  const handlePlaceDienInOrder = () => {
     const payload = {
-      order_note: orderNote
+      order_note: orderNote,
+      order_type: "Dine-in"
     }
     dispatch(proceedToPlaceOrder(payload))
+    console.log("-------> 6")
+  }
+
+  const handlePlaceDeliveryOrder = () => {
+    const payload = {
+      order_note: orderNote,
+      order_type: "Delivery"
+    }
+    dispatch(proceedToPlaceOrder(payload))
+    console.log("-------> 7")
   }
 
   return (
@@ -126,9 +141,9 @@ const Cart = () => {
                         <Button
                           variant="contained"
                           sx={{
-                            width: "200px",
-                            height: "60px",
-                            fontSize: "1.3rem",
+                            width: "210px",
+                            height: "50px",
+                            fontSize: "1",
                             fontWeight: "bold",
                             marginRight: "8px",
                             mb: "8px",
@@ -142,24 +157,43 @@ const Cart = () => {
                         <Button
                           variant="contained"
                           sx={{
-                            width: "350px",
-                            height: "60px",
-                            fontSize: "1.3rem",
+                            width: "210px",
+                            height: "50px",
+                            fontSize: "1",
                             fontWeight: "bold",
                             marginRight: "8px",
                             mb: "8px",
                           }}
                           color="success"
-                          onClick={handlePlaceOrder}
+                          onClick={handlePlaceDienInOrder}
                         >
-                          Place Order
+                          
+                          Place Dine-In Order
                         </Button>
+
                         <Button
                           variant="contained"
                           sx={{
-                            width: "200px",
-                            height: "60px",
-                            fontSize: "1.3rem",
+                            width: "210px",
+                            height: "50px",
+                            fontSize: "1",
+                            fontWeight: "bold",
+                            marginRight: "8px",
+                            mb: "8px",
+                          }}
+                          color="success"
+                          onClick={handlePlaceDeliveryOrder}
+                        >
+                          <DeliveryDiningIcon sx={{ mr: 1 }} />
+                          Place Delivery Order
+                        </Button>
+                        
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "210px",
+                            height: "50px",
+                            fontSize: "1",
                             fontWeight: "bold",
                             mb: "8px",
                           }}

@@ -192,6 +192,12 @@ const PendingOrders = ({ orders, maxMinHeight }) => {
                 </Typography>
                 <Typography variant="body2" component="div">
                   <Typography variant="body2" sx={{ fontWeight: "bold", display: "inline" }}>
+                    Type:
+                  </Typography>{" "}
+                  {order.order_type}
+                </Typography>
+                <Typography variant="body2" component="div">
+                  <Typography variant="body2" sx={{ fontWeight: "bold", display: "inline" }}>
                     Note:
                   </Typography>{" "}
                   {order.order_note}
