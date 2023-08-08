@@ -45,16 +45,15 @@ const iconMap = {
 const PendingOrders = ({ orders, maxMinHeight }) => {
 
 
-  const timeFormatter = (deteTimeString) => {
-
-    const date = new Date(deteTimeString);
-
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
+  const timeFormatter = (dateTimeString) => {
+    const dateParts = dateTimeString.split(' ');
+    const timeParts = dateParts[4].split(':');
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
     const amOrPm = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = (hours % 12) || 12;
-    return `${formattedHours < 10 ? "0" : ""}${formattedHours}:${minutes} ${amOrPm}`;
-
+  
+    return `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${amOrPm}`;
   };
 
   const generateOrderSummaryText = (items) => {

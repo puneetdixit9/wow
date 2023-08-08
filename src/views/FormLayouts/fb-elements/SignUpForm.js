@@ -63,13 +63,13 @@ const SignUpForm = () => {
     };
 
     useEffect(() => {
-        if (!Object.keys(authReducerState.signupError).length && formData.phone.length) {
-            navigate(`/wow-pizza/otp/${countryCode + formData.phone}`);
-        }
         if (authReducerState.signupError.hasOwnProperty("duplicate_entry")) {
             setDuplicateEntry(authReducerState.signupError.duplicate_entry)
+        } 
+        if (!Object.keys(authReducerState.signupError).length && formData.phone.length && !authReducerState.isLoading) {
+            navigate(`/wow-pizza/otp/${countryCode + formData.phone}`);
         }
-    }, [authReducerState.signupError])
+    }, [authReducerState.signupError, authReducerState.isLoading])
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;

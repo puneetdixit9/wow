@@ -7,6 +7,7 @@ import SwitchCameraOutlinedIcon from '@mui/icons-material/SwitchCameraOutlined';
 import SwitchLeftOutlinedIcon from '@mui/icons-material/SwitchLeftOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import AutoAwesomeMosaicOutlinedIcon from '@mui/icons-material/AutoAwesomeMosaicOutlined';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
@@ -28,15 +29,20 @@ const Menuitems = [
     href: "/wow-pizza/cart",
   },
   {
-    title: "Inventory",
-    icon: InventoryIcon,
-    href: "/wow-pizza/inventory",
-  },
-  {
     title: "Orders",
     icon: AspectRatioOutlinedIcon,
     href: "/wow-pizza/orders",
   },
+  {
+    title: "Delivery",
+    icon: DeliveryDiningIcon,
+    href: "/wow-pizza/delivery",
+  },
+  {
+    title: "Inventory",
+    icon: InventoryIcon,
+    href: "/wow-pizza/inventory",
+  }
   // {
   //   title: "Checkbox",
   //   icon: AssignmentTurnedInOutlinedIcon,

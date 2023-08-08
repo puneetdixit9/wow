@@ -30,56 +30,76 @@ const Cart = () => {
   const cartState = useAppSelector(state => state.itemsReducer)
   const [cartData, setCartData] = useState([])
   const [orderPlaced, setOrderPlaced] = useState(false)
-  const [orderId, setOrderId] = useState('')
+  const [orderNo, setOrderNo] = useState('')
   const gstRate = 5;
   const [orderNote, setOrderNote] = useState('')
+  const [deliveryAddress, setDeliveryAddress] = useState('')
+  const [mobileNumber, setMobileNumber] = useState('')
+  const [deliveryAddressRequired, setDeliveryAddressRequired] = useState(false)
+  const [mobileNumberRequired, setMobileNumberRequired] = useState(false)
 
   useEffect(() => {
     dispatch(resetPreviousPlacedOrder())
     dispatch(getCartData())
-    console.log("-------> 1")
   }, [])
 
   const handleOrderNoteChange = (event) => {
     setOrderNote(event.target.value);
-    console.log("-------> 2")
+  };
+
+  const handleAddressChange = (event) => {
+    setDeliveryAddress(event.target.value);
+  };
+
+  const handleMobileNumberChange = (event) => {
+    setMobileNumber(event.target.value);
   };
 
   useEffect(() => {
     setCartData(cartState.cartData)
-    console.log("-------> 3")
   }, [cartState.cartData])
 
   useEffect(() => {
-    if (cartState.orderId !== '') {
+    if (cartState.orderNo) {
       setOrderPlaced(true)
-      setOrderId(cartState.orderId)
+      setOrderNo(cartState.orderNo)
     }
-    console.log("-------> 4")
-  }, [cartState.orderId])
+  }, [cartState.orderNo])
 
   function handleDiscardCart() {
     dispatch(discardCart())
     setCartData([])
-    console.log("-------> 5")
   }
 
   const handlePlaceDienInOrder = () => {
-    const payload = {
-      order_note: orderNote,
-      order_type: "Dine-in"
+    if (mobileNumber !== "") {
+      const payload = {
+        order_note: orderNote,
+        order_type: "Dine-in",
+        mobile_number: mobileNumber,
+      }
+      dispatch(proceedToPlaceOrder(payload))
+    } else {
+      setMobileNumberRequired(true)
     }
-    dispatch(proceedToPlaceOrder(payload))
-    console.log("-------> 6")
   }
 
   const handlePlaceDeliveryOrder = () => {
-    const payload = {
-      order_note: orderNote,
-      order_type: "Delivery"
+    if (deliveryAddress !== "" && mobileNumber !== "") {
+      const payload = {
+        order_note: orderNote,
+        order_type: "Delivery",
+        delivery_address: deliveryAddress,
+        mobile_number: mobileNumber,
+      }
+      dispatch(proceedToPlaceOrder(payload))
     }
-    dispatch(proceedToPlaceOrder(payload))
-    console.log("-------> 7")
+    if (deliveryAddress === "") {
+      setDeliveryAddressRequired(true)
+    }
+    if (mobileNumber === "") {
+      setMobileNumberRequired(true)
+    }
   }
 
   return (
@@ -110,7 +130,7 @@ const Cart = () => {
                 </Box>
               </Box>
               {orderPlaced ? (
-                <Typography variant="h5">Order ID: {orderId}</Typography>
+                <Typography variant="h5">Order No: {orderNo}</Typography>
               ) : cartData.length ? (
                 <TableContainer sx={{ overflowX: 'auto' }}>
                   <CartTable items={cartData} gstRate={gstRate} />
@@ -130,6 +150,20 @@ const Cart = () => {
                     {cartData.length > 0 && (
                       <>
                         <TextField
+                          id="Mobile Number"
+                          label="Mobile Number"
+                          variant="outlined"
+                          fullWidth
+                          sx={{ mb: 2 }}
+                          value={mobileNumber}
+                          onChange={handleMobileNumberChange}
+                          required
+                          helperText={
+                            mobileNumberRequired ? "Mobile Number Required" : ""
+                          }
+                          error={mobileNumberRequired}
+                        />
+                        <TextField
                           id="default-value"
                           label="Order Note"
                           variant="outlined"
@@ -137,6 +171,20 @@ const Cart = () => {
                           sx={{ mb: 2 }}
                           value={orderNote}
                           onChange={handleOrderNoteChange}
+                        />
+
+                        <TextField
+                          id="Address"
+                          label="Delivery Address - Optional (If placing delivery order)"
+                          variant="outlined"
+                          fullWidth
+                          sx={{ mb: 2 }}
+                          value={deliveryAddress}
+                          onChange={handleAddressChange}
+                          helperText={
+                            deliveryAddressRequired ? "Delivery Address Required for Delivery Address" : ""
+                          }
+                          error={deliveryAddressRequired}
                         />
                         <Button
                           variant="contained"
@@ -167,7 +215,7 @@ const Cart = () => {
                           color="success"
                           onClick={handlePlaceDienInOrder}
                         >
-                          
+
                           Place Dine-In Order
                         </Button>
 
@@ -187,7 +235,7 @@ const Cart = () => {
                           <DeliveryDiningIcon sx={{ mr: 1 }} />
                           Place Delivery Order
                         </Button>
-                        
+
                         <Button
                           variant="contained"
                           sx={{

@@ -1,5 +1,5 @@
 import apiClient, { uploadApiClient } from '../../services/apiClient'
-import { ITEMS, CART, ORDER } from '../../constants'
+import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS } from '../../constants'
 
 import {
     fetchItems,
@@ -18,6 +18,9 @@ import {
     fetchOrders,
     fetchOrdersSuccess,
     fetchOrdersFailed,
+    changeOrderStatus,
+    changeOrderStatusSuccess,
+    changeOrderStatusFailed,
 } from '../reducer/Items'
 
 export const getItems = () => async dispatch => {
@@ -68,13 +71,24 @@ export const resetPreviousPlacedOrder = () => dispatch => {
     dispatch(resetPlaceOrder())
 }
 
-export const fetchAllOrders = () => async dispatch => {
+export const fetchAllOrders = (payload) => async dispatch => {
     await dispatch(fetchOrders())
     try {
-        const response = await apiClient.get(`${ORDER}`)
+        const response = await apiClient.post(ORDERS,  payload || {})
 
         return dispatch(fetchOrdersSuccess(response.data))
     } catch (err) {
         return dispatch(fetchOrdersFailed(err))
+    }
+}
+
+export const updateOrderStatus = (orderId, status) => async dispatch => {
+    await dispatch(changeOrderStatus())
+    try {
+        const response = await apiClient.put(`${ORDER_STATUS}/${orderId}/${status}`)
+
+        return dispatch(changeOrderStatusSuccess(response.data))
+    } catch (err) {
+        return dispatch(changeOrderStatusFailed(err))
     }
 }

@@ -8,12 +8,12 @@ import {
     Grid,
 } from "@mui/material";
 
-import OrdersTable from "./OrdersTable";
+import DeliveryOrdersTable from "./DeliveryTable";
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
 import { fetchAllOrders, updateOrderStatus } from "../../redux/actions/Items";
 
 
-const Orders = () => {
+const Delivery = () => {
     const dispatch = useAppDispatch()
     const reducerState = useAppSelector(state => state.itemsReducer)
     const [orders, setOrders] = useState([])
@@ -26,15 +26,35 @@ const Orders = () => {
                     return { ...order, status: status };
                 }
                 return order;
-            }).filter(order => order.status !== "prepared")
+            }).filter(order => order.status !== "allDone")
         );
     }
 
 
     useEffect(() => {
-        const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
-        dispatch(fetchAllOrders(payload))
-    }, [])
+        const fetchOrders = () => {
+            const payload = {
+                today_records: true,
+                order_by: {
+                    key: "created_at",
+                    sorting: "desc"
+                },
+                or_filters: {
+                    status: ["prepared", "inDelivery"]
+                },
+                filters: {
+                    order_type: "Delivery"
+                }
+            };
+            dispatch(fetchAllOrders(payload));
+        };
+    
+        fetchOrders();
+        const interval = setInterval(fetchOrders, 15000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
     useEffect(() => {
         setOrders(reducerState.orders)
@@ -63,7 +83,7 @@ const Orders = () => {
                                         }}
                                         gutterBottom
                                     >
-                                        Orders
+                                        Delivery Orders
                                     </Typography>
                                 </Box>
                                 <Box
@@ -83,7 +103,7 @@ const Orders = () => {
                                     mt: 0,
                                 }}
                             >
-                                <OrdersTable orders={orders} changeOrderStatus={handleUpdateOrderStatus} />
+                                <DeliveryOrdersTable orders={orders} changeOrderStatus={handleUpdateOrderStatus} />
                             </Box>
                         </CardContent>
                     </Card>
@@ -93,4 +113,4 @@ const Orders = () => {
     );
 };
 
-export default Orders;
+export default Delivery;

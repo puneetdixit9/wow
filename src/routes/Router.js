@@ -12,6 +12,7 @@ import ExSwitch from "../views/FormElements/ExSwitch.js";
 import FormLayouts from "../views/FormLayouts/FormLayouts.js";
 import Inventory from "../views/inventory/Inventory.js";
 import Orders from "../views/orders/Orders.js";
+import Delivery from "../views/delivery/Delivery.js";
 
 const ThemeRoutes = [
   {
@@ -24,6 +25,7 @@ const ThemeRoutes = [
       { path: "/wow-pizza/cart", element: <Checkout /> },
       { path: "/wow-pizza/inventory", element: <Inventory /> },
       { path: "/wow-pizza/orders", element: <Orders /> },
+      { path: "/wow-pizza/delivery", element: <Delivery /> },
       { path: "tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts/form-layouts", element: <FormLayouts /> },
       { path: "/form-elements/checkbox", element: <ExCheckbox /> },

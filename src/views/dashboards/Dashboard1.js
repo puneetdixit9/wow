@@ -20,7 +20,9 @@ const Dashboard1 = () => {
 
 
   useEffect(() => {
-    dispatch(fetchAllOrders())
+    // const payload = {today_records: true, order_by: {key: "created_at", sorting: "desc"}, or_filters: {status: ["placed", "inKitchen"]}}
+    const payload = {today_records: true, order_by: {key: "created_at", sorting: "desc"}}
+    dispatch(fetchAllOrders(payload))
   }, [])
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent, Typography, Button, Grid, Rating } from "@mui/material";
+import { Card, CardContent, Typography, Button, Grid, Rating, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
@@ -15,6 +15,9 @@ const FoodItemsCard = () => {
   const [cartData, setCartData] = useState([])
   const [quantities, setQuantities] = useState()
   const currentIndex = useRef(-1);
+
+  const [showSizePopup, setShowSizePopup] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
 
 
 
@@ -73,12 +76,16 @@ const FoodItemsCard = () => {
 
 
   const handleAddToCart = (index) => {
-
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [index]: prevQuantities[index] + 1,
-    }));
-    currentIndex.current = index
+    if (items[index].available_sizes.length > 0) {
+      setSelectedItemIndex(index);
+      setShowSizePopup(true);
+    } else {
+      setQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [index]: prevQuantities[index] + 1,
+      }));
+      currentIndex.current = index;
+    }
   };
 
   const handleRemoveFromCart = (index) => {
@@ -87,6 +94,21 @@ const FoodItemsCard = () => {
       [index]: prevQuantities[index] - 1,
     }));
     currentIndex.current = index
+  };
+
+  const handleSizeSelect = (size) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [selectedItemIndex]: prevQuantities[selectedItemIndex] + 1,
+    }));
+    currentIndex.current = selectedItemIndex;
+    setSelectedItemIndex(-1);
+    setShowSizePopup(false);
+  };
+
+  const handlePopupClose = () => {
+    setSelectedItemIndex(-1);
+    setShowSizePopup(false);
   };
 
   return (
@@ -161,6 +183,36 @@ const FoodItemsCard = () => {
           </Card>
         </Grid>
       ))}
+      <Dialog open={showSizePopup} onClose={handlePopupClose}>
+        <DialogTitle>Choose Size</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid item>
+              <div>
+                <img src={items[selectedItemIndex]?.img_url} alt="img" width="100%" height="370px" />
+              </div>
+            </Grid>
+            {items[selectedItemIndex]?.available_sizes?.map((sizeOption, index) => (
+              <Grid item key={index}>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleSizeSelect(sizeOption.size)}
+                >
+                  {sizeOption.size}
+                </Button>
+                <div>
+                  Prize: <CurrencyRupeeIcon sx={{ fontSize: 'inherit', fontWeight: 'inherit', mr: '-2px' }} /> {sizeOption.price}
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlePopupClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+
       <Grid container justifyContent="center">
         <Grid item
           xs={12}
