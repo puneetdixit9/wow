@@ -57,7 +57,7 @@ const PendingOrders = ({ orders, maxMinHeight }) => {
   };
 
   const generateOrderSummaryText = (items) => {
-    return items.map((item) => `${item.count}x ${item.item_name}`).join(', ');
+    return items.map((item) => `${item.count}x ${item.size} ${item.item_name}`).join(', ');
   };
 
 

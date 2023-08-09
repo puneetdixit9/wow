@@ -4,6 +4,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
 import { ADD_TO_CART } from '../../../constants'
+import TextField from "@mui/material/TextField"
 
 
 import { getItems, getCartData } from "../../../redux/actions/Items";
@@ -14,10 +15,13 @@ const FoodItemsCard = () => {
   const [items, setItems] = useState([])
   const [cartData, setCartData] = useState([])
   const [quantities, setQuantities] = useState()
-  const currentIndex = useRef(-1);
+  const currentItemId = useRef(-1);
 
   const [showSizePopup, setShowSizePopup] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState("");
+  var selectedItemSize = "regular"
+  const sizee = useRef(-1);
 
 
 
@@ -32,6 +36,7 @@ const FoodItemsCard = () => {
   useEffect(() => {
     setItems(itemsState.items)
     setCartData(itemsState.cartData)
+    sizee.current = "regular"
   }, [itemsState.items, itemsState.cartData])
 
 
@@ -41,19 +46,18 @@ const FoodItemsCard = () => {
       return map;
     }, {});
 
-    setQuantities(
-      items.map((item) => cartItemMap[item._id] || 0)
-    );
+    setQuantities(cartItemMap);
   }, [items, cartData]);
 
 
   useEffect(() => {
-    if (currentIndex.current !== -1) {
+    if (currentItemId.current !== -1) {
+      console.log("-------> size2", selectedItemSize, sizee.current)
       fetch(
         `${process.env.REACT_APP_API_URL}${ADD_TO_CART}/` +
-        items[currentIndex.current]._id +
+        currentItemId.current +
         "/" +
-        quantities[currentIndex.current],
+        quantities[currentItemId.current] + "/" + sizee.current,
         {
           method: "POST",
         }
@@ -72,36 +76,47 @@ const FoodItemsCard = () => {
         });
 
     }
-  }, [currentIndex, items, quantities]);
+    sizee.current = "regular"
+  }, [currentItemId, items, quantities]);
 
 
-  const handleAddToCart = (index) => {
-    if (items[index].available_sizes.length > 0) {
-      setSelectedItemIndex(index);
+  const handleAddToCart = (itemId) => {
+    const itemIndex = items.findIndex(item => item._id === itemId)
+    if ((!quantities.hasOwnProperty(itemId) || quantities[itemId] === 0) && items[itemIndex]?.available_sizes?.length > 0) {
+      setSelectedItemIndex(itemIndex);
       setShowSizePopup(true);
     } else {
+      setShowSizePopup(false);
       setQuantities((prevQuantities) => ({
         ...prevQuantities,
-        [index]: prevQuantities[index] + 1,
+        [itemId]: (prevQuantities[itemId] || 0) + 1,
       }));
-      currentIndex.current = index;
+      currentItemId.current = itemId;
     }
   };
+  
 
-  const handleRemoveFromCart = (index) => {
+  const handleRemoveFromCart = (itemId) => {
+    const itemIndex = items.findIndex(item => item._id === itemId)
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [index]: prevQuantities[index] - 1,
+      [itemId]: (prevQuantities[itemId] || 0) - 1,
     }));
-    currentIndex.current = index
+    currentItemId.current = itemId;
   };
 
   const handleSizeSelect = (size) => {
+    selectedItemSize = size
+    sizee.current = size
+    console.log("-------> size", selectedItemSize, size)
+    const itemId = items[selectedItemIndex]._id
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [selectedItemIndex]: prevQuantities[selectedItemIndex] + 1,
+      [itemId]: (prevQuantities[itemId] || 0) + 1,
     }));
-    currentIndex.current = selectedItemIndex;
+    currentItemId.current = itemId;
+
+
     setSelectedItemIndex(-1);
     setShowSizePopup(false);
   };
@@ -113,7 +128,20 @@ const FoodItemsCard = () => {
 
   return (
     <Grid container >
-      {items.map((item, index) => (
+       <Grid container justifyContent="center" sx={{ mt: "10px", mb: "10px", position: "sticky"}}>
+        <Grid item xs={12} lg={8}>
+          <TextField
+            label="Search Items"
+            variant="outlined"
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </Grid>
+      </Grid>
+      {items.filter((item) =>
+          item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+        ).map((item, index) => (
         <Grid
           key={index}
           item
@@ -151,19 +179,19 @@ const FoodItemsCard = () => {
                   </Grid>
                 </Grid>
               </div>
-              {quantities[index] ? (
+              {quantities[item._id] ? (
                 <Grid container alignItems="center" justifyContent="space-between" sx={{ mt: "15px" }}>
                   <Grid>
-                    <Button variant="outlined" onClick={() => handleRemoveFromCart(index)}>
+                    <Button variant="outlined" onClick={() => handleRemoveFromCart(item._id)}>
                       -1
                     </Button>
                   </Grid>
                   <Grid>
-                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Qty: {quantities[index]}</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Qty: {quantities[item._id]}</Typography>
                   </Grid>
 
                   <Grid>
-                    <Button variant="outlined" onClick={() => handleAddToCart(index)}>
+                    <Button variant="outlined" onClick={() => handleAddToCart(item._id)}>
                       +1
                     </Button>
                   </Grid>
@@ -174,7 +202,7 @@ const FoodItemsCard = () => {
                   variant="contained"
                   sx={{ mt: "15px" }}
                   color={item.btncolor}
-                  onClick={() => handleAddToCart(index)}
+                  onClick={() => handleAddToCart(item._id)}
                 >
                   Add to Cart
                 </Button>

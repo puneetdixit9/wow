@@ -24,6 +24,7 @@ export default function CartTable({items, gstRate}) {
                     
                     <TableRow>
                         <TableCell>Item</TableCell>
+                        <TableCell align="center">Size</TableCell>
                         <TableCell align="center">Qty.</TableCell>
                         <TableCell align="center">Rate/Qty.</TableCell>
                         <TableCell align="right">Sum</TableCell>
@@ -38,24 +39,25 @@ export default function CartTable({items, gstRate}) {
                                     <Typography sx={{ ml: 2 }}>{item.item_name}</Typography>
                                 </Box>
                             </TableCell>
+                            <TableCell align="center">{item.size}</TableCell>
                             <TableCell align="center">{item.count}</TableCell>
                             <TableCell align="center">{item.price}</TableCell>
                             <TableCell align="right">{item.price * item.count}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow>
-                        <TableCell rowSpan={3} />
-                        <TableCell colSpan={2}>Subtotal</TableCell>
+                        <TableCell rowSpan={4} />
+                        <TableCell colSpan={3}>Subtotal</TableCell>
                         <TableCell align="right">{subTotal}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>GST</TableCell>
+                        <TableCell colSpan={2}>GST</TableCell>
                         <TableCell align="right">{`${(gstRate)} %`}</TableCell>
                         <TableCell align="right">{gstCharge}</TableCell>
                     </TableRow>
                     <TableRow>
 
-                        <TableCell colSpan={2}>
+                        <TableCell colSpan={3}>
                             <Typography color="textSecondary" variant="h6" sx={{
                                 fontSize: "large",
                                 fontWeight: "bold",

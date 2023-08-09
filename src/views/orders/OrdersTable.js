@@ -17,7 +17,7 @@ export default function OrdersTable(props) {
             <Typography>
                 {items.map((item, index) => (
                     <React.Fragment key={index}>
-                        {`${item.count}x ${item.item_name}`}
+                        {`${item.count}x ${item.size} ${item.item_name}`}
                         <br />
                     </React.Fragment>
                 ))}
