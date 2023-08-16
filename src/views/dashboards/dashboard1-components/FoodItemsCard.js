@@ -187,7 +187,7 @@ const FoodItemsCard = () => {
                     </Button>
                   </Grid>
                   <Grid>
-                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Qty: {quantities[item._id]}</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }} variant="body1">Count(s): {quantities[item._id]}</Typography>
                   </Grid>
 
                   <Grid>

@@ -34,9 +34,14 @@ const Menuitems = [
     href: "/wow-pizza/orders",
   },
   {
-    title: "Delivery",
+    title: "Delivery Orders",
     icon: DeliveryDiningIcon,
     href: "/wow-pizza/delivery",
+  },
+  {
+    title: "Out For Delivery",
+    icon: DeliveryDiningIcon,
+    href: "/wow-pizza/out-for-delivery",
   },
   {
     title: "Inventory",

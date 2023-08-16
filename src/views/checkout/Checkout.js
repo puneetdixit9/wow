@@ -39,8 +39,11 @@ const Cart = () => {
   const [mobileNumberRequired, setMobileNumberRequired] = useState(false)
 
   useEffect(() => {
-    dispatch(resetPreviousPlacedOrder())
     dispatch(getCartData())
+    return () => {
+      dispatch(resetPreviousPlacedOrder())
+      setOrderPlaced(false)
+    }
   }, [])
 
   const handleOrderNoteChange = (event) => {
