@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
 import { sendOtpToPhone, resetOtpErr, login } from "../../../redux/actions/auth";
+import UserSession from "../../../services/auth";
 
 import {
     Card,
@@ -68,7 +69,11 @@ const LoginForm = () => {
         setloginError(authReducerState.loginError?.error || "")
         if (emailLoginData.email.length && authReducerState.loginSuccess) {
             dispatch(resetOtpErr())
-            navigate("/wow-pizza/dashboard")
+            if (UserSession.isCustomer()) {
+                navigate("/wow-pizza/food-items")
+            } else {
+                navigate("/wow-pizza/dashboard")
+            }
         }
     }, [authReducerState.loginError, authReducerState.loginSuccess])
 

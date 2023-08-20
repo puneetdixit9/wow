@@ -30,6 +30,14 @@ const isAuthenticated = () => {
     return JSON.parse(localStorage.getItem('user')) !== null
 }
 
+const isAdmin = () => {
+    return JSON.parse(localStorage.getItem('user'))?.role === "admin"
+}
+
+const isCustomer = () => {
+    return JSON.parse(localStorage.getItem('user'))?.role === "customer"
+}
+
 const UserSession = {
     getToken,
     getRefreshToken,
@@ -38,6 +46,8 @@ const UserSession = {
     setUser,
     removeUser,
     isAuthenticated,
+    isAdmin,
+    isCustomer,
 }
 
 export default UserSession

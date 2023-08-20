@@ -7,7 +7,7 @@ import { ADD_TO_CART } from '../../../constants'
 import TextField from "@mui/material/TextField"
 
 
-import { getItems, getCartData } from "../../../redux/actions/Items";
+import { getItems, getCartData, addToCartItems } from "../../../redux/actions/Items";
 
 const FoodItemsCard = () => {
   const dispatch = useAppDispatch()
@@ -45,36 +45,13 @@ const FoodItemsCard = () => {
       map[item._id] = item.count;
       return map;
     }, {});
-
     setQuantities(cartItemMap);
   }, [items, cartData]);
 
 
   useEffect(() => {
     if (currentItemId.current !== -1) {
-      console.log("-------> size2", selectedItemSize, sizee.current)
-      fetch(
-        `${process.env.REACT_APP_API_URL}${ADD_TO_CART}/` +
-        currentItemId.current +
-        "/" +
-        quantities[currentItemId.current] + "/" + sizee.current,
-        {
-          method: "POST",
-        }
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("Response Data:", data);
-        })
-        .catch((error) => {
-          console.error("Fetch Error:", error);
-        });
-
+      dispatch(addToCartItems(currentItemId.current, quantities[currentItemId.current], sizee.current))
     }
     sizee.current = "regular"
   }, [currentItemId, items, quantities]);
@@ -94,7 +71,7 @@ const FoodItemsCard = () => {
       currentItemId.current = itemId;
     }
   };
-  
+
 
   const handleRemoveFromCart = (itemId) => {
     const itemIndex = items.findIndex(item => item._id === itemId)
@@ -108,7 +85,6 @@ const FoodItemsCard = () => {
   const handleSizeSelect = (size) => {
     selectedItemSize = size
     sizee.current = size
-    console.log("-------> size", selectedItemSize, size)
     const itemId = items[selectedItemIndex]._id
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
@@ -128,7 +104,7 @@ const FoodItemsCard = () => {
 
   return (
     <Grid container >
-       <Grid container justifyContent="center" sx={{ mt: "10px", mb: "10px", position: "sticky"}}>
+      <Grid container justifyContent="center" sx={{ mt: "10px", mb: "10px", position: "sticky" }}>
         <Grid item xs={12} lg={8}>
           <TextField
             label="Search Items"
@@ -140,8 +116,8 @@ const FoodItemsCard = () => {
         </Grid>
       </Grid>
       {items.filter((item) =>
-          item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
-        ).map((item, index) => (
+        item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+      ).map((item, index) => (
         <Grid
           key={index}
           item

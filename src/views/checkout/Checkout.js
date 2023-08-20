@@ -17,6 +17,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
+import UserSession from "../../services/auth";
 
 
 import { getCartData, discardCart, proceedToPlaceOrder, resetPreviousPlacedOrder } from "../../redux/actions/Items";
@@ -75,7 +76,7 @@ const Cart = () => {
   }
 
   const handlePlaceDienInOrder = () => {
-    if (mobileNumber !== "") {
+    if (UserSession.isCustomer() || mobileNumber !== "") {
       const payload = {
         order_note: orderNote,
         order_type: "Dine-in",
@@ -152,20 +153,23 @@ const Cart = () => {
                   <>
                     {cartData.length > 0 && (
                       <>
-                        <TextField
-                          id="Mobile Number"
-                          label="Mobile Number"
-                          variant="outlined"
-                          fullWidth
-                          sx={{ mb: 2 }}
-                          value={mobileNumber}
-                          onChange={handleMobileNumberChange}
-                          required
-                          helperText={
-                            mobileNumberRequired ? "Mobile Number Required" : ""
-                          }
-                          error={mobileNumberRequired}
-                        />
+                        {!UserSession.isCustomer() && (
+                          <TextField
+                            id="Mobile Number"
+                            label="Mobile Number"
+                            variant="outlined"
+                            fullWidth
+                            sx={{ mb: 2 }}
+                            value={mobileNumber}
+                            onChange={handleMobileNumberChange}
+                            required
+                            helperText={
+                              mobileNumberRequired ? "Mobile Number Required" : ""
+                            }
+                            error={mobileNumberRequired}
+                          />
+                        )}
+
                         <TextField
                           id="default-value"
                           label="Order Note"

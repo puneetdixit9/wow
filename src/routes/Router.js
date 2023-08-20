@@ -14,6 +14,8 @@ import Inventory from "../views/inventory/Inventory.js";
 import Orders from "../views/orders/Orders.js";
 import Delivery from "../views/delivery/Delivery.js";
 import OutForDelivery from "../views/outForDelivery.js/OutForDelivery.js";
+import Unauthorized from "../views/Unauthorized/Unauthorized.js";
+import UserSession from "../services/auth.js";
 
 const ThemeRoutes = [
   {
@@ -21,7 +23,7 @@ const ThemeRoutes = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <Navigate to="/wow-pizza/dashboard" /> },
-      { path: "/wow-pizza/dashboard", exact: true, element: <Dashboard1 /> },
+      { path: "/wow-pizza/dashboard", exact: true, element: (UserSession.isAdmin()) ? <Dashboard1 /> : <Unauthorized /> },
       { path: "/wow-pizza/food-items", element: <ExAutoComplete /> },
       { path: "/wow-pizza/cart", element: <Checkout /> },
       { path: "/wow-pizza/inventory", element: <Inventory /> },

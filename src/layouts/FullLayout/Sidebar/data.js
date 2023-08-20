@@ -11,8 +11,9 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
+import UserSession from '../../../services/auth';
 
-const Menuitems = [
+const Menuitems = UserSession.isAdmin() ? [
   {
     title: "Dashboard",
     icon: DashboardOutlinedIcon,
@@ -47,7 +48,7 @@ const Menuitems = [
     title: "Inventory",
     icon: InventoryIcon,
     href: "/wow-pizza/inventory",
-  }
+  },
   // {
   //   title: "Checkbox",
   //   icon: AssignmentTurnedInOutlinedIcon,
@@ -78,6 +79,22 @@ const Menuitems = [
   //   icon: AutoAwesomeMosaicOutlinedIcon,
   //   href: "/tables/basic-table",
   // },
-];
+] : [
+  {
+    title: "Food Items",
+    icon: FastfoodIcon,
+    href: "/wow-pizza/food-items",
+  },
+  {
+    title: "Cart",
+    icon: ShoppingCartSharpIcon,
+    href: "/wow-pizza/cart",
+  },
+  {
+    title: "Orders",
+    icon: AspectRatioOutlinedIcon,
+    href: "/wow-pizza/orders",
+  }
+]
 
 export default Menuitems;

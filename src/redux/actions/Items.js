@@ -1,5 +1,5 @@
 import apiClient, { uploadApiClient } from '../../services/apiClient'
-import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS } from '../../constants'
+import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS, ADD_TO_CART } from '../../constants'
 
 import {
     fetchItems,
@@ -21,6 +21,9 @@ import {
     changeOrderStatus,
     changeOrderStatusSuccess,
     changeOrderStatusFailed,
+    addToCart,
+    addToCartSuccess,
+    addToCartFailed,
 } from '../reducer/Items'
 
 export const getItems = () => async dispatch => {
@@ -74,7 +77,7 @@ export const resetPreviousPlacedOrder = () => dispatch => {
 export const fetchAllOrders = (payload) => async dispatch => {
     await dispatch(fetchOrders())
     try {
-        const response = await apiClient.post(ORDERS,  payload || {})
+        const response = await apiClient.post(ORDERS, payload || {})
 
         return dispatch(fetchOrdersSuccess(response.data))
     } catch (err) {
@@ -90,5 +93,16 @@ export const updateOrderStatus = (orderId, status) => async dispatch => {
         return dispatch(changeOrderStatusSuccess(response.data))
     } catch (err) {
         return dispatch(changeOrderStatusFailed(err))
+    }
+}
+
+export const addToCartItems = (itemId, count, size) => async dispatch => {
+    await dispatch(addToCart())
+    try {
+        const response = await apiClient.post(`${ADD_TO_CART}/${itemId}/${count}/${size}`)
+
+        return dispatch(addToCartSuccess(response.data))
+    } catch (err) {
+        return dispatch(addToCartFailed(err))
     }
 }

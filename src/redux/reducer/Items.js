@@ -161,6 +161,25 @@ export const itemsReducer = createSlice({
                 changeOrderStatusError: action.payload?.error,
             }
         },
+        addToCart(state, action) {
+            return {
+                ...state,
+                isError: false,
+            }
+        },
+        addToCartSuccess(state, action) {
+            return {
+                ...state,
+                isError: false,
+            }
+        },
+        addToCartFailed(state, action) {
+            return {
+                ...state,
+                message: 'Add to cart Failed',
+                isError: true,
+            }
+        },
     },
 })
 
@@ -184,6 +203,9 @@ export const {
     changeOrderStatus,
     changeOrderStatusSuccess,
     changeOrderStatusFailed,
+    addToCart,
+    addToCartSuccess,
+    addToCartFailed,
 } = itemsReducer.actions
 
 export default itemsReducer.reducer

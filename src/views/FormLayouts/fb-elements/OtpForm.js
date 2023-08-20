@@ -4,6 +4,7 @@ import { Card, CardContent, Divider, Box, Typography, Button, Grid, CircularProg
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
 import { login, resetOtpErr, sendOtpToPhone } from "../../../redux/actions/auth";
+import UserSession from "../../../services/auth";
 
 const OtpForm = () => {
   const navigate = useNavigate()
@@ -61,7 +62,14 @@ const OtpForm = () => {
   useEffect(() => {
     setErrorMsg(authReducerState.loginError?.error)
     if (otpValue.length && !authReducerState.otpVerifyError) {
-      navigate("/wow-pizza/dashboard")
+      if (UserSession.isCustomer()) {
+        console.log("=-------------")
+        navigate("/wow-pizza/food-items")
+      } else {
+        console.log("=-------------qq")
+        navigate("/wow-pizza/dashboard")
+      }
+
     }
   }, [authReducerState.loginError, authReducerState.otpVerifyError])
 
@@ -135,11 +143,11 @@ const OtpForm = () => {
             <Box sx={{ textAlign: "center", mt: 2 }}>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item>
-                  <Button 
-                  color="primary" 
-                  variant="contained" 
-                  sx={{ width: 140 }}
-                  onClick={handleResendOtp}
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    sx={{ width: 140 }}
+                    onClick={handleResendOtp}
                   >
                     {authReducerState.isLoading ? (
                       <CircularProgress color="inherit" size={25} />
@@ -156,7 +164,7 @@ const OtpForm = () => {
                     ref={buttonRef}
                     onClick={handleSubmitOtp}
                     disabled={!otpValue.length}
-                    >
+                  >
                     {authReducerState.isLoading ? (
                       <CircularProgress color="inherit" size={25} />
                     ) : (
