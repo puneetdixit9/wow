@@ -246,7 +246,7 @@ const Header = (props) => {
             },
           }}
         >
-          <MenuItem onClick={handleClose4}>
+          {/* <MenuItem onClick={handleClose4}>
             <Avatar
               sx={{
                 width: "35px",
@@ -260,20 +260,20 @@ const Header = (props) => {
             >
               My account
             </Box>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleClose4}>
+          </MenuItem> */}
+          {/* <Divider /> */}
+          {/* <MenuItem onClick={handleClose4}>
             <ListItemIcon>
               <PersonAddOutlinedIcon fontSize="small" />
             </ListItemIcon>
             Add another account
-          </MenuItem>
-          <MenuItem onClick={handleClose4}>
+          </MenuItem> */}
+          {/* <MenuItem onClick={handleClose4}>
             <ListItemIcon>
               <SettingsOutlinedIcon fontSize="small" />
             </ListItemIcon>
             Settings
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <LogoutOutlinedIcon fontSize="small" />

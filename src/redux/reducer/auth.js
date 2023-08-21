@@ -40,7 +40,7 @@ export const authReducer = createSlice({
                 ...state,
                 isLoading: false,
                 loginSuccess: false,
-                loginError: action.payload.response.data
+                loginError: action?.payload?.response?.data
             }
         },
         resetOtpError(state, action) {

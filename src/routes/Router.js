@@ -23,7 +23,7 @@ const ThemeRoutes = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <Navigate to="/wow-pizza/dashboard" /> },
-      { path: "/wow-pizza/dashboard", exact: true, element: (UserSession.isAdmin()) ? <Dashboard1 /> : <Unauthorized /> },
+      { path: "/wow-pizza/dashboard", element: (UserSession.isAdmin()) ? <Dashboard1 /> : <Unauthorized /> },
       { path: "/wow-pizza/food-items", element: <ExAutoComplete /> },
       { path: "/wow-pizza/cart", element: <Checkout /> },
       { path: "/wow-pizza/inventory", element: <Inventory /> },
