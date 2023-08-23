@@ -11,12 +11,39 @@ import {
 import OrdersTable from "./OrdersTable";
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
 import { fetchAllOrders, updateOrderStatus } from "../../redux/actions/Items";
+import Stomp from 'stompjs';
 
 
 const Orders = () => {
     const dispatch = useAppDispatch()
     const reducerState = useAppSelector(state => state.itemsReducer)
     const [orders, setOrders] = useState([])
+
+    useEffect(() => {
+        const client = Stomp.client('ws://52.54.183.1:15674/ws');
+        
+        const onConnect = () => {
+            console.log('Connected to RabbitMQ via WebSocket');
+        
+            client.subscribe('/queue/test', (message) => {
+                console.log("=====> ", message.body);
+            });
+        };
+        
+        const onDisconnect = () => {
+            console.log('Disconnected from RabbitMQ via WebSocket');
+        };
+        
+        client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
+        
+        return () => {
+            if (client && client.connected) { // Check if the client is connected before disconnecting
+                client.disconnect();
+            }
+        };
+    }, []);
+    
+
 
     const handleUpdateOrderStatus = (orderId, status) => {
         dispatch(updateOrderStatus(orderId, status))
