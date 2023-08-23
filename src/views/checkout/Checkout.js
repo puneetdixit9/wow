@@ -38,6 +38,7 @@ const Cart = () => {
   const [mobileNumber, setMobileNumber] = useState('')
   const [deliveryAddressRequired, setDeliveryAddressRequired] = useState(false)
   const [mobileNumberRequired, setMobileNumberRequired] = useState(false)
+  const [total, setTotal] = useState()
 
   useEffect(() => {
     dispatch(getCartData())
@@ -61,6 +62,7 @@ const Cart = () => {
 
   useEffect(() => {
     setCartData(cartState.cartData)
+    setTotal(cartState.cartData.reduce((acc, item) => acc + item.price * item.count, 0) + (cartState.cartData.reduce((acc, item) => acc + item.price * item.count, 0) * gstRate / 100))
   }, [cartState.cartData])
 
   useEffect(() => {
@@ -81,6 +83,7 @@ const Cart = () => {
         order_note: orderNote,
         order_type: "Dine-in",
         mobile_number: mobileNumber,
+        total: total
       }
       dispatch(proceedToPlaceOrder(payload))
     } else {
@@ -89,12 +92,13 @@ const Cart = () => {
   }
 
   const handlePlaceDeliveryOrder = () => {
-    if (deliveryAddress !== "" && mobileNumber !== "") {
+    if (deliveryAddress !== "" && (UserSession.isCustomer() || mobileNumber !== "")) {
       const payload = {
         order_note: orderNote,
         order_type: "Delivery",
         delivery_address: deliveryAddress,
         mobile_number: mobileNumber,
+        total: total
       }
       dispatch(proceedToPlaceOrder(payload))
     }

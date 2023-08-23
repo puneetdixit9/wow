@@ -34,6 +34,10 @@ const isAdmin = () => {
     return JSON.parse(localStorage.getItem('user'))?.role === "admin"
 }
 
+const isDeliveryMan = () => {
+    return JSON.parse(localStorage.getItem('user'))?.role === "deliveryMan"
+}
+
 const isCustomer = () => {
     return JSON.parse(localStorage.getItem('user'))?.role === "customer"
 }
@@ -48,6 +52,7 @@ const UserSession = {
     isAuthenticated,
     isAdmin,
     isCustomer,
+    isDeliveryMan,
 }
 
 export default UserSession

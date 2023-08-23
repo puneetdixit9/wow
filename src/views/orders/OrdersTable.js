@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Card, CardContent, Typography, Button, Grid, Rating } from "@mui/material";
 import PropTypes from 'prop-types';
+import UserSession from '../../services/auth';
 
 export default function OrdersTable(props) {
     const { orders, changeOrderStatus } = props;
@@ -46,7 +47,7 @@ export default function OrdersTable(props) {
                         <TableCell align="left">Order Note</TableCell>
                         <TableCell align="center">Order Type</TableCell>
                         <TableCell align="center">Order Time</TableCell>
-                        <TableCell align="center">Change Status</TableCell>
+                        <TableCell align="center">{UserSession.isCustomer() ? "Current Status" : "Change Status"}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -63,15 +64,25 @@ export default function OrdersTable(props) {
                             <TableCell align="center">{row.order_type}</TableCell>
                             <TableCell align="center">{timeFormatter(row.placed_at)}</TableCell>
                             <TableCell align="center">
-                                <Button
-                                    variant="contained"
-                                    color={row.status === "placed" ? "secondary" : "success"}
-                                    sx={{ width: "180px", fontSize: "1" }}
-                                    onClick={() => changeOrderStatus(row.order_id, row.status === "placed"? "inKitchen" : "prepared")}
-                                >
-                                    {row.status === "placed" ? "Start Praparing" : "Parpared"}
-                                </Button>
+                                {UserSession.isCustomer() ? (
+                                    row.status // If user is a customer, display the status
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        color={row.status === "placed" ? "secondary" : "success"}
+                                        sx={{ width: "180px", fontSize: "1" }}
+                                        onClick={() =>
+                                            changeOrderStatus(
+                                                row.order_id,
+                                                row.status === "placed" ? "inKitchen" : "prepared"
+                                            )
+                                        }
+                                    >
+                                        {row.status === "placed" ? "Start Preparing" : "Prepared"}
+                                    </Button>
+                                )}
                             </TableCell>
+
                         </TableRow>
                     ))}
                 </TableBody>

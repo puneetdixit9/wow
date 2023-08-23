@@ -21,12 +21,7 @@ const Delivery = () => {
     const handleUpdateOrderStatus = (orderId, status) => {
         dispatch(updateOrderStatus(orderId, status))
         setOrders(prevOrders =>
-            prevOrders.map(order => {
-                if (order.order_id === orderId) {
-                    return { ...order, status: status };
-                }
-                return order;
-            }).filter(order => order.status !== "allDone")
+            prevOrders.filter(order => order.order_id !== orderId)
         );
     }
 
@@ -40,7 +35,7 @@ const Delivery = () => {
                     sorting: "desc"
                 },
                 or_filters: {
-                    status: ["prepared", "inDelivery"]
+                    status: ["prepared"]
                 },
                 filters: {
                     order_type: "Delivery"

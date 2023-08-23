@@ -35,12 +35,12 @@ const Menuitems = UserSession.isAdmin() ? [
     href: "/wow-pizza/orders",
   },
   {
-    title: "Delivery Orders",
+    title: "Ready to Pickup",
     icon: DeliveryDiningIcon,
     href: "/wow-pizza/delivery",
   },
   {
-    title: "Out For Delivery",
+    title: "In Delivery",
     icon: DeliveryDiningIcon,
     href: "/wow-pizza/out-for-delivery",
   },
@@ -49,36 +49,17 @@ const Menuitems = UserSession.isAdmin() ? [
     icon: InventoryIcon,
     href: "/wow-pizza/inventory",
   },
-  // {
-  //   title: "Checkbox",
-  //   icon: AssignmentTurnedInOutlinedIcon,
-  //   href: "/form-elements/checkbox",
-  // },
-  // {
-  //   title: "Radio",
-  //   icon: AlbumOutlinedIcon,
-  //   href: "/form-elements/radio",
-  // },
-  // {
-  //   title: "Slider",
-  //   icon: SwitchCameraOutlinedIcon,
-  //   href: "/form-elements/slider",
-  // },
-  // {
-  //   title: "Switch",
-  //   icon: SwitchLeftOutlinedIcon,
-  //   href: "/form-elements/switch",
-  // },
-  // {
-  //   title: "Form",
-  //   icon: DescriptionOutlinedIcon,
-  //   href: "/form-layouts/form-layouts",
-  // },
-  // {
-  //   title: "Table",
-  //   icon: AutoAwesomeMosaicOutlinedIcon,
-  //   href: "/tables/basic-table",
-  // },
+] : UserSession.isDeliveryMan() ? [
+  {
+    title: "Ready to Pickup",
+    icon: DeliveryDiningIcon,
+    href: "/wow-pizza/delivery",
+  },
+  {
+    title: "In Delivery",
+    icon: DeliveryDiningIcon,
+    href: "/wow-pizza/out-for-delivery",
+  }
 ] : [
   {
     title: "Food Items",
