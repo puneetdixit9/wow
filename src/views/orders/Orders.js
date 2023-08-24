@@ -27,6 +27,8 @@ const Orders = () => {
         
             client.subscribe('/queue/test', (message) => {
                 console.log("=====> ", message.body);
+                const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
+                dispatch(fetchAllOrders(payload))
             });
         };
         
