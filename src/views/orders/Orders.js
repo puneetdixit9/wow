@@ -19,10 +19,26 @@ const Orders = () => {
     const dispatch = useAppDispatch()
     const reducerState = useAppSelector(state => state.itemsReducer)
     const [orders, setOrders] = useState([])
+    const buttonRef = useRef(null);
 
     function play() {
-        new Audio(sound).play()
+        const audioElement = new Audio(sound);
+    
+        // Attach an event listener to handle errors
+        audioElement.addEventListener('error', (event) => {
+            console.error('Audio playback error:', event.target.error);
+            // You can add more error handling logic here
+        });
+    
+        // Attempt to play the audio, handling autoplay restrictions
+        try {
+            audioElement.play();
+        } catch (error) {
+            console.warn('Autoplay blocked:', error.message);
+            // You can add fallback behavior or user interaction here
+        }
     }
+    
 
     useEffect(() => {
         const client = Stomp.client('ws://52.54.183.1:15674/ws');
@@ -33,12 +49,13 @@ const Orders = () => {
             client.subscribe('/exchange/orders', (message) => {
                 const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
                 dispatch(fetchAllOrders(payload))
-                play()
+                buttonRef.current.click();
             });
         };
 
         const onDisconnect = () => {
             console.log('Disconnected from RabbitMQ via WebSocket');
+            // client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
         };
 
         client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
@@ -122,9 +139,9 @@ const Orders = () => {
                     </Card>
                 </Grid>
             </Grid>
-            {/* <div>
-                <button onClick={play}>Play Notification Sound</button>
-            </div> */}
+            <div>
+                <button id="orderNotification" ref={buttonRef} onClick={play} hidden></button>
+            </div>
         </Box>
 
     );
