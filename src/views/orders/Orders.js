@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import {
     Card,
@@ -12,6 +12,7 @@ import OrdersTable from "./OrdersTable";
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
 import { fetchAllOrders, updateOrderStatus } from "../../redux/actions/Items";
 import Stomp from 'stompjs';
+import sound from './sound.wav'
 
 
 const Orders = () => {
@@ -19,32 +20,35 @@ const Orders = () => {
     const reducerState = useAppSelector(state => state.itemsReducer)
     const [orders, setOrders] = useState([])
 
+    function play() {
+        new Audio(sound).play()
+    }
+
     useEffect(() => {
         const client = Stomp.client('ws://52.54.183.1:15674/ws');
-        
+
         const onConnect = () => {
             console.log('Connected to RabbitMQ via WebSocket');
-        
-            client.subscribe('/queue/test', (message) => {
-                console.log("=====> ", message.body);
+
+            client.subscribe('/exchange/orders', (message) => {
                 const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
                 dispatch(fetchAllOrders(payload))
+                play()
             });
         };
-        
+
         const onDisconnect = () => {
             console.log('Disconnected from RabbitMQ via WebSocket');
         };
-        
+
         client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
-        
+
         return () => {
             if (client && client.connected) { // Check if the client is connected before disconnecting
                 client.disconnect();
             }
         };
     }, []);
-    
 
 
     const handleUpdateOrderStatus = (orderId, status) => {
@@ -118,7 +122,11 @@ const Orders = () => {
                     </Card>
                 </Grid>
             </Grid>
+            {/* <div>
+                <button onClick={play}>Play Notification Sound</button>
+            </div> */}
         </Box>
+
     );
 };
 
