@@ -49,6 +49,11 @@ const Menuitems = UserSession.isAdmin() ? [
     icon: InventoryIcon,
     href: "/wow-pizza/inventory",
   },
+  {
+    title: "User Profile",
+    icon: DeliveryDiningIcon,
+    href: "/wow-pizza/profile"
+  }
 ] : UserSession.isDeliveryMan() ? [
   {
     title: "Ready to Pickup",

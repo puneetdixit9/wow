@@ -13,6 +13,7 @@ import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
 import { fetchAllOrders, updateOrderStatus } from "../../redux/actions/Items";
 import Stomp from 'stompjs';
 import sound from './sound.wav'
+import UserSession from "../../services/auth";
 
 
 const Orders = () => {
@@ -24,19 +25,14 @@ const Orders = () => {
     function play() {
         const audioElement = new Audio(sound);
     
-        // Attach an event listener to handle errors
-        audioElement.addEventListener('error', (event) => {
-            console.error('Audio playback error:', event.target.error);
-            // You can add more error handling logic here
-        });
-    
-        // Attempt to play the audio, handling autoplay restrictions
-        try {
-            audioElement.play();
-        } catch (error) {
-            console.warn('Autoplay blocked:', error.message);
-            // You can add fallback behavior or user interaction here
-        }
+        // audioElement.addEventListener('error', (event) => {
+        //     console.error('Audio playback error:', event.target.error);
+        // });
+        // try {
+        //     audioElement.play();
+        // } catch (error) {
+        //     console.warn('Autoplay blocked:', error.message);
+        // }
     }
     
 
@@ -49,7 +45,7 @@ const Orders = () => {
             client.subscribe('/exchange/orders', (message) => {
                 const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
                 dispatch(fetchAllOrders(payload))
-                buttonRef.current.click();
+                // buttonRef.current.click();
             });
         };
 
@@ -82,7 +78,7 @@ const Orders = () => {
 
 
     useEffect(() => {
-        const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
+        const payload = { today_records: !UserSession.isCustomer(), order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: !UserSession.isCustomer() ? ["placed", "inKitchen"] : [] } }
         dispatch(fetchAllOrders(payload))
     }, [])
 

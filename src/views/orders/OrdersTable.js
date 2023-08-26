@@ -37,6 +37,15 @@ export default function OrdersTable(props) {
         return `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${amOrPm}`;
     };
 
+    const dateFormatter = (dateTimeString) => {
+        const dateParts = dateTimeString.split(' ');
+        const year = dateParts[3];
+        const month = dateParts[1];
+        const day = dateParts[2];
+        return `${month} ${day}, ${year}`;;
+    };
+
+
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 550 }}>
             <Table aria-label="simple table">
@@ -46,6 +55,9 @@ export default function OrdersTable(props) {
                         <TableCell align="left">Items</TableCell>
                         <TableCell align="left">Order Note</TableCell>
                         <TableCell align="center">Order Type</TableCell>
+                        <TableCell align="center">
+                            {UserSession.isCustomer() ? 'Order Date' : ''}
+                        </TableCell>
                         <TableCell align="center">Order Time</TableCell>
                         <TableCell align="center">{UserSession.isCustomer() ? "Current Status" : "Change Status"}</TableCell>
                     </TableRow>
@@ -62,6 +74,9 @@ export default function OrdersTable(props) {
                             <TableCell align="left">{generateOrderSummaryText(row.items)}</TableCell>
                             <TableCell align="left">{row.order_note}</TableCell>
                             <TableCell align="center">{row.order_type}</TableCell>
+                            <TableCell align="center">
+                                {UserSession.isCustomer() && dateFormatter(row.placed_at)}
+                            </TableCell>
                             <TableCell align="center">{timeFormatter(row.placed_at)}</TableCell>
                             <TableCell align="center">
                                 {UserSession.isCustomer() ? (

@@ -16,6 +16,7 @@ import Delivery from "../views/delivery/Delivery.js";
 import OutForDelivery from "../views/outForDelivery.js/OutForDelivery.js";
 import Unauthorized from "../views/Unauthorized/Unauthorized.js";
 import UserSession from "../services/auth.js";
+import UserProfile from "../views/users/Profile.js";
 
 const ThemeRoutes = [
   {
@@ -30,6 +31,7 @@ const ThemeRoutes = [
       { path: "/wow-pizza/orders", element: <Orders /> },
       { path: "/wow-pizza/delivery", element: <Delivery /> },
       { path: "/wow-pizza/out-for-delivery", element: <OutForDelivery /> },
+      { path: "/wow-pizza/profile", element: (UserSession.isAdmin()) ? <UserProfile /> : <Unauthorized /> },
       { path: "tables/basic-table", element: <BasicTable /> },
       { path: "/form-layouts/form-layouts", element: <FormLayouts /> },
       { path: "/form-elements/checkbox", element: <ExCheckbox /> },
