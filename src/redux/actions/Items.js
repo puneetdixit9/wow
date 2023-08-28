@@ -1,5 +1,5 @@
 import apiClient, { uploadApiClient } from '../../services/apiClient'
-import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS, ADD_TO_CART, FETCH_USER_INFO, CAFE_CONFIG } from '../../constants'
+import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS, ADD_TO_CART, USER_INFO, CAFE_CONFIG, USERS } from '../../constants'
 
 import {
     fetchItems,
@@ -30,6 +30,12 @@ import {
     getCafeConfig,
     getCafeConfigSuccess,
     getCafeConfigFailed,
+    updateUser,
+    updateUserSuccess,
+    updateUserFailed,
+    getUsers,
+    getUsersSuccess,
+    getUsersFailed,
 } from '../reducer/Items'
 
 export const getItems = () => async dispatch => {
@@ -114,9 +120,9 @@ export const addToCartItems = (itemId, count, size) => async dispatch => {
 }
 
 export const getUserByEmail = (email) => async dispatch => {
-    await dispatch(getUserInfo)
+    await dispatch(getUserInfo())
     try {
-        const response = await apiClient.get(`${FETCH_USER_INFO}/${email}`)
+        const response = await apiClient.get(`${USER_INFO}/${email}`)
 
         return dispatch(getUserInfoSuccess(response.data))
     } catch (err) {
@@ -125,12 +131,35 @@ export const getUserByEmail = (email) => async dispatch => {
 }
 
 export const fetchCafeConfig = (restautant) => async dispatch => {
-    await dispatch(getCafeConfig)
+    await dispatch(getCafeConfig())
     try {
         const response = await apiClient.get(`${CAFE_CONFIG}/${restautant}`)
 
         return dispatch(getCafeConfigSuccess(response.data))
     } catch (err) {
         return dispatch(getCafeConfigFailed(err))
+    }
+}
+
+export const updateUserProfile = (email, payload) => async dispatch => {
+    await dispatch(updateUser())
+    try {
+        const response = await apiClient.put(`${USER_INFO}/${email}`, payload)
+
+        return dispatch(updateUserSuccess(response.data))
+    } catch (err) {
+        return dispatch(updateUserFailed(err))
+    }
+}
+
+
+export const getUsersWithRole = (role) => async dispatch => {
+    await dispatch(getUsers())
+    try {
+        const response = await apiClient.get(`${USERS}?role=${role}`)
+
+        return dispatch(getUsersSuccess(response.data))
+    } catch (err) {
+        return dispatch(getUsersFailed(err))
     }
 }

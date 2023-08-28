@@ -78,7 +78,6 @@ const Cart = () => {
   }
 
   const handlePlaceDienInOrder = () => {
-    console.log("=======>  ", UserSession.isCustomer())
     if (UserSession.isCustomer() || mobileNumber !== "") {
       const payload = {
         order_note: orderNote,

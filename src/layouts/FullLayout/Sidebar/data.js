@@ -11,7 +11,10 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
+import PersonIcon from '@mui/icons-material/Person';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import UserSession from '../../../services/auth';
+import { PestControl } from '@mui/icons-material';
 
 const Menuitems = UserSession.isAdmin() ? [
   {
@@ -50,9 +53,14 @@ const Menuitems = UserSession.isAdmin() ? [
     href: "/wow-pizza/inventory",
   },
   {
-    title: "User Profile",
-    icon: DeliveryDiningIcon,
-    href: "/wow-pizza/profile"
+    title: "Users",
+    icon: PersonIcon,
+    href: "/wow-pizza/profile",
+  },
+  {
+    title: "Delivery Man",
+    icon: AssignmentIndIcon,
+    href: "/wow-pizza/delivery-man",
   }
 ] : UserSession.isDeliveryMan() ? [
   {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux-hooks'
-import { useNavigate } from 'react-router-dom'
 import {
     Avatar,
     Typography,
@@ -9,17 +8,15 @@ import {
     TextField,
     Button,
     Grid,
+    Box,
     Switch,
     Autocomplete,
     CircularProgress,
 } from '@mui/material';
 import UserSession from '../../services/auth';
-import { getUserByEmail, fetchCafeConfig } from '../../redux/actions/Items';
+import { getUserByEmail, fetchCafeConfig, updateUserProfile } from '../../redux/actions/Items';
 
 const UserProfile = () => {
-    const userId = 2
-
-    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const reducerState = useAppSelector(state => state.itemsReducer)
 
@@ -32,6 +29,9 @@ const UserProfile = () => {
     const [cafeConfig, setCafeConfig] = useState({});
     const [searchingUser, setSearchingUser] = useState(false);
     const [searchUserError, setSearchUserError] = useState(false);
+    const [userActivationUpdating, setUserActivationUpdating] = useState(false)
+    const [emptyRoleError, setEmptyRoleError] = useState(false)
+    const [userEmailSearch, setUserEmailSearch] = useState(false)
 
     useEffect(() => {
         dispatch(fetchCafeConfig("hassanpur"))
@@ -44,15 +44,31 @@ const UserProfile = () => {
         setSearchingUser(reducerState.gettingUserInfo)
     }, [reducerState.userInfo, reducerState.cafeConfig, reducerState.gettingUserInfo])
 
+    useEffect(() => {
+        if (!reducerState.isUserUpdating) {
+            setUserActivationUpdating(false)
+            if (updatingUserProfile && !reducerState.isError) {
+                setUpdatedUserProfileFields({})
+            }
+            setUpdatingUserProfile(false)
+        }
+    }, [reducerState.isUserUpdating])
+
+    const handleSearchInputChange = (value) => {
+        setSearchQuery(value)
+        setUserEmailSearch(false)
+    }
+
     const searchUser = () => {
         if (searchQuery.length) {
             setSearchUserError(false)
             dispatch(getUserByEmail(searchQuery))
             setSearchingUser(true)
+            setUserEmailSearch(true)
         } else {
             setSearchUserError(true)
         }
-        
+
     }
 
     const handleEditInfoToggle = () => {
@@ -63,10 +79,18 @@ const UserProfile = () => {
     };
 
     const handleSave = () => {
-        setUpdatingUserProfile(true)
+        if ("role" in updatedUserProfileFields && updatedUserProfileFields["role"] === null) {
+            setEmptyRoleError(true)
+        } else {
+            dispatch(updateUserProfile(userProfile.email, updatedUserProfileFields))
+            setUpdatingUserProfile(true)
+        }
     };
 
     const handleProfileChange = (key, value) => {
+        if (key === "role" && value) {
+            setEmptyRoleError(false)
+        }
         setUserProfile({
             ...userProfile,
             [key]: value
@@ -87,6 +111,8 @@ const UserProfile = () => {
                 is_active: !userProfile.is_active
             }
         );
+        dispatch(updateUserProfile(userProfile.email, payload))
+        setUserActivationUpdating(true)
     }
 
 
@@ -94,21 +120,21 @@ const UserProfile = () => {
 
         <Container sx={{ marginTop: 2 }}>
             <Grid container justifyContent="center" alignItems="center" sx={{ mt: "10px", mb: "10px", position: "sticky" }}>
-                <Grid item xs={12} lg={6} sx={{ display: "flex", justifyContent: "center" }}>
+                <Grid item xs={12} lg={9} xl={6} sx={{ display: "flex", justifyContent: "center", marginBottom: { xs: "10px", lg: 0 } }}>
                     <TextField
-                        label="Search user by email"
+                        label="User Email"
                         variant="outlined"
                         fullWidth
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => handleSearchInputChange(e.target.value)}
                         error={searchUserError}
                         helperText={searchUserError ? "Invalid Email" : ""}
                     />
                 </Grid>
-                <Grid item xs={12} lg={2}>
+                <Grid item xs={12} lg={3} xl={2} sx={{ display: "flex", justifyContent: "center", marginBottom: { xs: "10px", lg: 0 } }}>
                     <Button
                         variant="contained"
-                        sx={{ ml: 2, display: "block" }}
+                        sx={{ display: "block" }}
                         onClick={searchUser}
                         disabled={searchingUser}
                         startIcon={searchingUser ? <CircularProgress size={15} /> : null}
@@ -118,7 +144,7 @@ const UserProfile = () => {
                 </Grid>
             </Grid>
 
-            {Object.keys(userProfile).length > 0 && (
+            {Object.keys(userProfile).length > 0 ? (
                 <Paper elevation={1} sx={{ padding: 3 }}>
                     <Avatar sx={{ width: 100, height: 100, marginBottom: 2 }} />
 
@@ -127,11 +153,11 @@ const UserProfile = () => {
                             <Typography variant="h7" sx={{ mt: 2 }}>{userProfile.email} | {userProfile.role}</Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant="body2">Deactivate User</Typography>
-                            {reducerState.userActivatioUpdating ? (
+                            <Typography variant="body2">User Activate/Deactivate</Typography>
+                            {userActivationUpdating ? (
                                 <CircularProgress size={20} />
                             ) : (
-                                <Switch checked={!userProfile.is_active} onChange={handleActiveInactiveUser} color="primary" disabled={!UserSession.isAdmin()} />
+                                <Switch checked={userProfile.is_active} onChange={handleActiveInactiveUser} color="primary" disabled={!UserSession.isAdmin()} />
                             )}
                         </Grid>
                     </Grid>
@@ -143,18 +169,8 @@ const UserProfile = () => {
                                 value={userProfile.first_name || ''}
                                 disabled={!editingInfo}
                                 fullWidth
-                                sx={{ mb: 2, mt: 2 }}
+                                sx={{ mb: 2 }}
                                 onChange={(event) => handleProfileChange("first_name", event.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Middle Name"
-                                value={userProfile.middle_name || ''}
-                                disabled={!editingInfo}
-                                fullWidth
-                                sx={{ mb: 2, mt: 2 }}
-                                onChange={(event) => handleProfileChange("middle_name", event.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -163,8 +179,19 @@ const UserProfile = () => {
                                 value={userProfile.last_name || ''}
                                 disabled={!editingInfo}
                                 fullWidth
-                                sx={{ mb: 2, mt: 2 }}
+                                sx={{ mb: 2 }}
                                 onChange={(event) => handleProfileChange("last_name", event.target.value)}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                label="Phone Number"
+                                value={userProfile.phone || ''}
+                                disabled={!editingInfo}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                                onChange={(event) => handleProfileChange("mobile_number", event.target.value)}
                             />
                         </Grid>
 
@@ -177,16 +204,7 @@ const UserProfile = () => {
                                 sx={{ mb: 2 }}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Phone Number"
-                                value={userProfile.phone || ''}
-                                disabled={!editingInfo}
-                                fullWidth
-                                sx={{ mb: 2 }}
-                                onChange={(event) => handleProfileChange("mobile_number", event.target.value)}
-                            />
-                        </Grid>
+
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 label="User Id"
@@ -211,8 +229,11 @@ const UserProfile = () => {
                                         fullWidth
                                         name="role"
                                         label="Role"
+                                        error={emptyRoleError}
+                                        helperText={emptyRoleError ? "Role can not be empty" : ""}
                                     />
                                 )}
+
                             />
 
                         </Grid>
@@ -238,6 +259,23 @@ const UserProfile = () => {
                         </Button>
                     )}
                 </Paper>
+            ) : (
+                userEmailSearch ? (
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        minHeight="25vh"
+                        textAlign="center"
+                    >
+                        <Typography variant="h3">404 - User not found with ({searchQuery})</Typography>
+                        <Typography variant="body1">
+                            Please check your entered email address and try again.
+                        </Typography>
+                    </Box>
+                ) : null
+
             )}
         </Container>
     );

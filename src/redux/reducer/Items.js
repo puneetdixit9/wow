@@ -15,8 +15,9 @@ const initialState = {
     isError: false,
     userInfo: {},
     gettingUserInfo: false,
-    userActivatioUpdating: false,
+    isUserUpdating: false,
     cafeConfig: {},
+    users: [],
 }
 
 export const itemsReducer = createSlice({
@@ -118,6 +119,7 @@ export const itemsReducer = createSlice({
             return {
                 ...state,
                 orderNo: 0,
+                orders: []
             }
         },
         fetchOrders(state, action) {
@@ -227,6 +229,50 @@ export const itemsReducer = createSlice({
                 isError: true,
             }
         },
+        updateUser(state, action) {
+            return {
+                ...state,
+                isError: false,
+                isUserUpdating: true,
+            }
+        },
+        updateUserSuccess(state, action) {
+            return {
+                ...state,
+                isError: false,
+                isUserUpdating: false,
+
+            }
+        },
+        updateUserFailed(state, action) {
+            return {
+                ...state,
+                message: 'Failed to update user profile',
+                isError: true,
+                isUserUpdating: false,
+            }
+        },
+        getUsers(state, action) {
+            return {
+                ...state,
+                isError: false,
+            }
+        },
+        getUsersSuccess(state, action) {
+            return {
+                ...state,
+                isError: false,
+                users: action.payload,
+
+            }
+        },
+        getUsersFailed(state, action) {
+            return {
+                ...state,
+                message: 'Failed to get users',
+                isError: true,
+            }
+        },
     },
 })
 
@@ -259,6 +305,12 @@ export const {
     getCafeConfig,
     getCafeConfigSuccess,
     getCafeConfigFailed,
+    updateUser,
+    updateUserSuccess,
+    updateUserFailed,
+    getUsers,
+    getUsersSuccess,
+    getUsersFailed,
 } = itemsReducer.actions
 
 export default itemsReducer.reducer

@@ -15,7 +15,7 @@ import {
     fetchUserInfoFailed,
 } from '../reducer/auth'
 import apiClient from '../../services/apiClient'
-import { CHANGE_PASSWORD, LOGIN_API, REGISTER_API, SEND_OTP, FETCH_USER_INFO } from '../../constants'
+import { CHANGE_PASSWORD, LOGIN_API, REGISTER_API, SEND_OTP, USER_INFO } from '../../constants'
 
 const globalConfig = {
     retry: 3,
@@ -81,7 +81,7 @@ export const fetchUserInformation = () => async dispatch => {
     console.log('Calling action --------> : fetchUserInformation()')
     await dispatch(fetchUserInfo())
     try {
-        const response = await apiClient.get(FETCH_USER_INFO)
+        const response = await apiClient.get(USER_INFO)
         return dispatch(fetchUserInfoSuccess(response))
     } catch (err) {
         return dispatch(fetchUserInfoFailed(err))
