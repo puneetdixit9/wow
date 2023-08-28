@@ -13,6 +13,10 @@ const initialState = {
     orders: [],
     message: '',
     isError: false,
+    userInfo: {},
+    gettingUserInfo: false,
+    userActivatioUpdating: false,
+    cafeConfig: {},
 }
 
 export const itemsReducer = createSlice({
@@ -180,6 +184,49 @@ export const itemsReducer = createSlice({
                 isError: true,
             }
         },
+        getUserInfo(state, action) {
+            return {
+                ...state,
+                isError: false,
+                gettingUserInfo: true,
+            }
+        },
+        getUserInfoSuccess(state, action) {
+            return {
+                ...state,
+                isError: false,
+                userInfo: action.payload,
+                gettingUserInfo: false,
+            }
+        },
+        getUserInfoFailed(state, action) {
+            return {
+                ...state,
+                message: 'Failed to get user info',
+                isError: true,
+                gettingUserInfo: false,
+            }
+        },
+        getCafeConfig(state, action) {
+            return {
+                ...state,
+                isError: false,
+            }
+        },
+        getCafeConfigSuccess(state, action) {
+            return {
+                ...state,
+                isError: false,
+                cafeConfig: action.payload,
+            }
+        },
+        getCafeConfigFailed(state, action) {
+            return {
+                ...state,
+                message: 'Failed to get cafe config',
+                isError: true,
+            }
+        },
     },
 })
 
@@ -206,6 +253,12 @@ export const {
     addToCart,
     addToCartSuccess,
     addToCartFailed,
+    getUserInfo,
+    getUserInfoSuccess,
+    getUserInfoFailed,
+    getCafeConfig,
+    getCafeConfigSuccess,
+    getCafeConfigFailed,
 } = itemsReducer.actions
 
 export default itemsReducer.reducer

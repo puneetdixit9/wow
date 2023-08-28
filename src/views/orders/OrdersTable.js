@@ -42,7 +42,7 @@ export default function OrdersTable(props) {
         const year = dateParts[3];
         const month = dateParts[1];
         const day = dateParts[2];
-        return `${month} ${day}, ${year}`;;
+        return `${month} ${day}, ${year}`;
     };
 
 
@@ -54,10 +54,24 @@ export default function OrdersTable(props) {
                         <TableCell>Order No.</TableCell>
                         <TableCell align="left">Items</TableCell>
                         <TableCell align="left">Order Note</TableCell>
-                        <TableCell align="center">Order Type</TableCell>
-                        <TableCell align="center">
-                            {UserSession.isCustomer() ? 'Order Date' : ''}
+                        <TableCell align="left">
+                            {!UserSession.isCustomer() ? "Customer Mobile" : ""}
                         </TableCell>
+                        <TableCell align="center">Order Type</TableCell>
+                        {UserSession.isCustomer() && (
+                            <>
+
+                                <TableCell align="center">
+                                    Delivery Man
+                                </TableCell>
+                                <TableCell align="center">
+                                    Delivery Man Mobile
+                                </TableCell>
+                                <TableCell align="center">
+                                    Order Date
+                                </TableCell>
+                            </>
+                        )}
                         <TableCell align="center">Order Time</TableCell>
                         <TableCell align="center">{UserSession.isCustomer() ? "Current Status" : "Change Status"}</TableCell>
                     </TableRow>
@@ -66,21 +80,37 @@ export default function OrdersTable(props) {
                     {orders.map((row) => (
                         <TableRow
                             key={row.order_id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            sx={{
+                                '&:last-child td, &:last-child th': { border: 0 },
+                                backgroundColor: row.status === "placed" ? "#ff5555" : ""
+                            }}
                         >
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" sx={{ fontWeight: 'bold' }}>
                                 {row.order_no}
                             </TableCell>
                             <TableCell align="left">{generateOrderSummaryText(row.items)}</TableCell>
                             <TableCell align="left">{row.order_note}</TableCell>
-                            <TableCell align="center">{row.order_type}</TableCell>
-                            <TableCell align="center">
-                                {UserSession.isCustomer() && dateFormatter(row.placed_at)}
+                            <TableCell align="left">
+                                {!UserSession.isCustomer() ? row.mobile_number : ""}
                             </TableCell>
+                            <TableCell align="center">{row.order_type}</TableCell>
+                            {UserSession.isCustomer() && (
+                                <>
+                                    <TableCell align="center">
+                                        {row.delivery_man}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {row.delivery_man_mobile}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {dateFormatter(row.placed_at)}
+                                    </TableCell>
+                                </>
+                            )}
                             <TableCell align="center">{timeFormatter(row.placed_at)}</TableCell>
-                            <TableCell align="center">
+                            <TableCell align="center" sx={{ fontWeight: UserSession.isCustomer() ? 'bold' : '' }}>
                                 {UserSession.isCustomer() ? (
-                                    row.status // If user is a customer, display the status
+                                    row.status
                                 ) : (
                                     <Button
                                         variant="contained"

@@ -1,5 +1,5 @@
 import apiClient, { uploadApiClient } from '../../services/apiClient'
-import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS, ADD_TO_CART } from '../../constants'
+import { ITEMS, CART, ORDER, ORDERS, ORDER_STATUS, ADD_TO_CART, FETCH_USER_INFO, CAFE_CONFIG } from '../../constants'
 
 import {
     fetchItems,
@@ -24,6 +24,12 @@ import {
     addToCart,
     addToCartSuccess,
     addToCartFailed,
+    getUserInfo,
+    getUserInfoSuccess,
+    getUserInfoFailed,
+    getCafeConfig,
+    getCafeConfigSuccess,
+    getCafeConfigFailed,
 } from '../reducer/Items'
 
 export const getItems = () => async dispatch => {
@@ -104,5 +110,27 @@ export const addToCartItems = (itemId, count, size) => async dispatch => {
         return dispatch(addToCartSuccess(response.data))
     } catch (err) {
         return dispatch(addToCartFailed(err))
+    }
+}
+
+export const getUserByEmail = (email) => async dispatch => {
+    await dispatch(getUserInfo)
+    try {
+        const response = await apiClient.get(`${FETCH_USER_INFO}/${email}`)
+
+        return dispatch(getUserInfoSuccess(response.data))
+    } catch (err) {
+        return dispatch(getUserInfoFailed(err))
+    }
+}
+
+export const fetchCafeConfig = (restautant) => async dispatch => {
+    await dispatch(getCafeConfig)
+    try {
+        const response = await apiClient.get(`${CAFE_CONFIG}/${restautant}`)
+
+        return dispatch(getCafeConfigSuccess(response.data))
+    } catch (err) {
+        return dispatch(getCafeConfigFailed(err))
     }
 }

@@ -20,21 +20,7 @@ const Orders = () => {
     const dispatch = useAppDispatch()
     const reducerState = useAppSelector(state => state.itemsReducer)
     const [orders, setOrders] = useState([])
-    const buttonRef = useRef(null);
-
-    function play() {
-        const audioElement = new Audio(sound);
-    
-        // audioElement.addEventListener('error', (event) => {
-        //     console.error('Audio playback error:', event.target.error);
-        // });
-        // try {
-        //     audioElement.play();
-        // } catch (error) {
-        //     console.warn('Autoplay blocked:', error.message);
-        // }
-    }
-    
+    const audioElement = new Audio(sound);
 
     useEffect(() => {
         const client = Stomp.client('ws://52.54.183.1:15674/ws');
@@ -44,8 +30,8 @@ const Orders = () => {
 
             client.subscribe('/exchange/orders', (message) => {
                 const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
+                audioElement.play()
                 dispatch(fetchAllOrders(payload))
-                // buttonRef.current.click();
             });
         };
 
@@ -55,13 +41,26 @@ const Orders = () => {
         };
 
         client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
-
         return () => {
             if (client && client.connected) { // Check if the client is connected before disconnecting
                 client.disconnect();
             }
         };
     }, []);
+
+
+    // function getLocalStream() {
+    //     navigator.mediaDevices
+    //       .getUserMedia({ video: true, audio: true, speaker: true, sound: true })
+    //       .then((stream) => {
+    //         window.localStream = stream; // A
+    //         window.localAudio.srcObject = stream; // B
+    //         window.localAudio.autoplay = true; // C
+    //       })
+    //       .catch((err) => {
+    //         console.error(`you got an error: ${err}`);
+    //       });
+    //   }
 
 
     const handleUpdateOrderStatus = (orderId, status) => {
@@ -135,9 +134,6 @@ const Orders = () => {
                     </Card>
                 </Grid>
             </Grid>
-            <div>
-                <button id="orderNotification" ref={buttonRef} onClick={play} hidden></button>
-            </div>
         </Box>
 
     );
