@@ -63,10 +63,10 @@ const OtpForm = () => {
     setErrorMsg(authReducerState.loginError?.error)
     if (otpValue.length && !authReducerState.otpVerifyError) {
       if (UserSession.isCustomer()) {
-        console.log("=-------------")
         navigate("/wow-pizza/food-items")
+      } else if (UserSession.isDeliveryMan()) {
+        navigate("/wow-pizza/delivery")
       } else {
-        console.log("=-------------qq")
         navigate("/wow-pizza/dashboard")
       }
 
@@ -77,18 +77,18 @@ const OtpForm = () => {
     <div>
       <style>
         {`
-          /* Chrome, Safari, Edge, Opera */
-          input::-webkit-outer-spin-button,
-          input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-          
-          /* Firefox */
-          input[type=number] {
-            -moz-appearance: textfield;
-          }
-        `}
+              /* Chrome, Safari, Edge, Opera */
+              input::-webkit-outer-spin-button,
+              input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+              }
+              
+              /* Firefox */
+              input[type=number] {
+                -moz-appearance: textfield;
+              }
+            `}
       </style>
       <Card variant="outlined" sx={{ p: 0 }}>
         <Box sx={{ padding: "15px 30px" }} display="flex" alignItems="center">

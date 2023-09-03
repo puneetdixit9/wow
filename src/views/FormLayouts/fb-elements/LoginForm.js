@@ -71,6 +71,8 @@ const LoginForm = () => {
             dispatch(resetOtpErr())
             if (UserSession.isCustomer()) {
                 navigate("/wow-pizza/food-items")
+            } else if (UserSession.isDeliveryMan()) {
+                navigate("/wow-pizza/delivery")
             } else {
                 navigate("/wow-pizza/dashboard")
             }

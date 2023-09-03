@@ -14,7 +14,7 @@ import {
     TableRow,
 } from '@mui/material';
 
-import { getUsersWithRole, fetchAllOrders, resetPreviousPlacedOrder } from '../../redux/actions/Items';
+import { getUsersData, fetchAllOrders, resetPreviousPlacedOrder } from '../../redux/actions/Items';
 
 const DeliveryMan = () => {
     const dispatch = useAppDispatch()
@@ -26,7 +26,7 @@ const DeliveryMan = () => {
 
 
     useEffect(() => {
-        dispatch(getUsersWithRole("deliveryMan"))
+        dispatch(getUsersData("deliveryMan"))
 
         return () => {
             dispatch(resetPreviousPlacedOrder())

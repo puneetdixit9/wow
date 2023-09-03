@@ -153,13 +153,21 @@ export const updateUserProfile = (email, payload) => async dispatch => {
 }
 
 
-export const getUsersWithRole = (role) => async dispatch => {
+export const getUsersData = (queryParams) => async dispatch => {
     await dispatch(getUsers())
     try {
-        const response = await apiClient.get(`${USERS}?role=${role}`)
+        let url = USERS;
+        if (queryParams) {
+            const queryParamsString = Object.keys(queryParams)
+                .map(key => `${key}=${encodeURIComponent(queryParams[key])}`)
+                .join('&');
+            url = `${USERS}?${queryParamsString}`;
+        }
 
-        return dispatch(getUsersSuccess(response.data))
+        const response = await apiClient.get(url);
+
+        return dispatch(getUsersSuccess(response.data));
     } catch (err) {
-        return dispatch(getUsersFailed(err))
+        return dispatch(getUsersFailed(err));
     }
-}
+};
