@@ -30,6 +30,8 @@ const SignUpForm = () => {
     const countryCode = "+91";
     const [passwordMismatchError, setPasswordMismatchError] = useState(false)
     const [passwordLengthError, setPasswordLengthError] = useState(false)
+    const [invalidPhoneError, setInvalidPhoneError] = useState(false)
+    const [invalidEmailError, setInvalidEmailError] = useState(false)
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -47,6 +49,8 @@ const SignUpForm = () => {
             setShowRequiredError(true);
         } else if (formData.password !== formData.confirmPassword) {
             setPasswordMismatchError(true)
+        } else if (formData.phone.length < 10) {
+            setInvalidPhoneError(true)
         }
         else {
             setShowRequiredError(false);
@@ -54,7 +58,7 @@ const SignUpForm = () => {
             const convertedFormData = {
                 first_name: formData.firstName,
                 last_name: formData.lastName,
-                phone: countryCode + formData.phone,
+                phone: formData.phone,
                 email: formData.email,
                 password: formData.password,
             };
@@ -65,14 +69,30 @@ const SignUpForm = () => {
     useEffect(() => {
         if (authReducerState.signupError.hasOwnProperty("duplicate_entry")) {
             setDuplicateEntry(authReducerState.signupError.duplicate_entry)
-        } 
-        if (!Object.keys(authReducerState.signupError).length && formData.phone.length && !authReducerState.isLoading) {
+        }
+        if (authReducerState.signupError.hasOwnProperty("invalid_phone")) {
+            setInvalidPhoneError(true)
+        }
+
+        if (authReducerState.signupError.hasOwnProperty("error")) {
+            setInvalidEmailError(true)
+        }
+
+        if (!Object.keys(authReducerState.signupError).length && formData.phone.length &&
+            !authReducerState.isLoading && !authReducerState.signupError.hasOwnProperty("invalid_phone")) {
             navigate(`/wow-pizza/otp/${countryCode + formData.phone}`);
         }
     }, [authReducerState.signupError, authReducerState.isLoading])
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+        if (name === "phone") {
+            if (value.length > 10) {
+                return
+            } else if (value.length === 10) {
+                setInvalidPhoneError(false)
+            }
+        }
         if (duplicateEntry.includes(name) || missingFields.includes(name)) {
             setDuplicateEntry(prevDuplicateEntry => prevDuplicateEntry.filter(item => item !== name));
             setMissingFields(prevDuplicateEntry => prevDuplicateEntry.filter(item => item !== name))
@@ -91,7 +111,10 @@ const SignUpForm = () => {
             } else {
                 setPasswordLengthError(false)
             }
+        }
 
+        if (name == "email") {
+            setInvalidEmailError(false)
         }
 
         setFormData((prevData) => ({
@@ -199,9 +222,9 @@ const SignUpForm = () => {
                                     ? "Required field"
                                     : duplicateEntry.includes("phone")
                                         ? "Phone Number already exists"
-                                        : ""
+                                        : invalidPhoneError ? "Phone Number is Invalid" : ""
                             }
-                            error={duplicateEntry.includes("phone") || (showRequiredError && missingFields.includes("phone"))}
+                            error={duplicateEntry.includes("phone") || (showRequiredError && missingFields.includes("phone")) || invalidPhoneError}
                             required
                         />
                         <TextField
@@ -221,9 +244,9 @@ const SignUpForm = () => {
                                     ? "Required field"
                                     : duplicateEntry.includes("email")
                                         ? "Email already exists"
-                                        : ""
+                                        : invalidEmailError ? "Not a valid email address" : ""
                             }
-                            error={duplicateEntry.includes("email") || (showRequiredError && missingFields.includes("email"))}
+                            error={duplicateEntry.includes("email") || (showRequiredError && missingFields.includes("email")) || invalidEmailError}
                             required
                         />
                         <Box display="flex" mb={2}>

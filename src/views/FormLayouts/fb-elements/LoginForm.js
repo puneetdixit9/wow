@@ -49,7 +49,7 @@ const LoginForm = () => {
     const handleLoginWithPhone = () => {
         setClickedButton("phone")
         const payload = {
-            phone: countryCode + phoneNumber
+            phone: phoneNumber
         }
         dispatch(sendOtpToPhone(payload))
     }
@@ -66,7 +66,11 @@ const LoginForm = () => {
     }
 
     useEffect(() => {
-        setloginError(authReducerState.loginError?.error || "")
+        if (authReducerState.loginError.error && authReducerState.loginError.error.includes("Not a valid email")) {
+            setloginError("Not a valid email address")
+        } else {
+            setloginError(authReducerState.loginError?.error || "")
+        }
         if (emailLoginData.email.length && authReducerState.loginSuccess) {
             dispatch(resetOtpErr())
             if (UserSession.isCustomer()) {
@@ -80,8 +84,10 @@ const LoginForm = () => {
     }, [authReducerState.loginError, authReducerState.loginSuccess])
 
     const handlePhoneNumberChange = (event) => {
-        setSendOtpError("")
-        setPhoneNUmber(event.target.value)
+        if (event.target.value.length < 11) {
+            setSendOtpError("")
+            setPhoneNUmber(event.target.value)
+        }
     }
 
     useEffect(() => {
@@ -150,11 +156,13 @@ const LoginForm = () => {
                                 mb: 2,
                             }}
                             value={phoneNumber}
+                            maxLength="10"
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">{countryCode}</InputAdornment>,
                                 inputProps: {
                                     pattern: "\\d*",
                                     inputMode: "numeric",
+                                    maxLength: 10,
                                 },
                             }}
                             onChange={handlePhoneNumberChange}

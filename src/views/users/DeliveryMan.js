@@ -26,7 +26,7 @@ const DeliveryMan = () => {
 
 
     useEffect(() => {
-        dispatch(getUsersData("deliveryMan"))
+        dispatch(getUsersData({role: "deliveryMan"}))
 
         return () => {
             dispatch(resetPreviousPlacedOrder())

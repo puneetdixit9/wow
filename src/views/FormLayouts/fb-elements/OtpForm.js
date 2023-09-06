@@ -40,7 +40,7 @@ const OtpForm = () => {
 
   const handleSubmitOtp = () => {
     const payload = {
-      phone: phoneNumber,
+      phone: phoneNumber.slice(3),
       otp: otpValue
     }
     dispatch(login(payload));
@@ -48,7 +48,7 @@ const OtpForm = () => {
 
   const handleResendOtp = () => {
     const payload = {
-      phone: phoneNumber
+      phone: phoneNumber.slice(3)
     }
     dispatch(sendOtpToPhone(payload));
   }
