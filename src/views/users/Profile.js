@@ -11,6 +11,7 @@ import {
     Box,
     Switch,
     Autocomplete,
+    InputAdornment,
     CircularProgress,
 } from '@mui/material';
 import UserSession from '../../services/auth';
@@ -32,6 +33,7 @@ const UserProfile = () => {
     const [userActivationUpdating, setUserActivationUpdating] = useState(false)
     const [emptyRoleError, setEmptyRoleError] = useState(false)
     const [userEmailSearch, setUserEmailSearch] = useState(false)
+    const countryCode = "+91"
 
     useEffect(() => {
         dispatch(fetchCafeConfig("hassanpur"))
@@ -90,6 +92,8 @@ const UserProfile = () => {
     const handleProfileChange = (key, value) => {
         if (key === "role" && value) {
             setEmptyRoleError(false)
+        } else if (key === "phone" && value.length > 10) {
+            return
         }
         setUserProfile({
             ...userProfile,
@@ -191,7 +195,15 @@ const UserProfile = () => {
                                 disabled={!editingInfo}
                                 fullWidth
                                 sx={{ mb: 2 }}
-                                onChange={(event) => handleProfileChange("mobile_number", event.target.value)}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">{countryCode}</InputAdornment>,
+                                    inputProps: {
+                                        pattern: "\\d*",
+                                        inputMode: "numeric",
+                                        maxLength: 10,
+                                    },
+                                }}
+                                onChange={(event) => handleProfileChange("phone", event.target.value)}
                             />
                         </Grid>
 
