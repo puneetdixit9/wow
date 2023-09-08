@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
@@ -11,6 +11,12 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux-hooks'
 import { fetchUserInformation } from "../../../redux/actions/auth";
+import { getDatabase, ref, onValue, orderByChild, orderByValue, limitToLast, query } from 'firebase/database';
+import { getFirestore, doc, onSnapshot, collection } from 'firebase/firestore';
+import sound from './sound.wav'
+
+import { useFirebase } from "../../../FirebaseService";
+
 
 import {
   AppBar,
@@ -25,18 +31,93 @@ import {
   ListItemIcon,
 } from "@mui/material";
 
-// import userimg from "../../../assets/images/users/user.jpg";
 
 const Header = (props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
+  const audioElement = new Audio(sound);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const authReducerState = useAppSelector(state => state.authReducer)
   const [userInfo, setUserInfo] = useState({})
+  const [newDocData, setNewDocData] = useState({})
+  const [lastOrderReceived, setLastOrderReceived] = useState(false)
+
+
+  const firebaseApp = useFirebase();
+  const firestore = getFirestore(firebaseApp);
+  const database = getDatabase(firebaseApp);
+  const collectionRef = collection(firestore, 'Orders');
+  const recentPostsRef = query(ref(database, 'Orders'), limitToLast(1));
 
   useEffect(() => {
     dispatch(fetchUserInformation())
+    if (!isMobileDevice()) {
+      requestPushNotificationPermission()
+    }
   }, [])
+
+  function requestPushNotificationPermission() {
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Push notification permission granted');
+      } else {
+        console.warn('Push notification permission denied');
+      }
+    });
+  }
+
+  function isMobileDevice() {
+    const mobileKeywords = ["Android", "iPhone", "iPad", "Windows Phone", "webOS", "iPod", "BlackBerry"];
+    return mobileKeywords.some(keyword => navigator.userAgent.includes(keyword));
+  }
+
+
+  useEffect(() => {
+    console.log("=====>> ", isMobileDevice())
+    let isFirstOrder = true;
+
+    const unsubscribe = onValue(recentPostsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (isFirstOrder) {
+        isFirstOrder = false;
+      } else {
+        console.log('New Order Placed:', data[Object.keys(data)[0]]);
+        setNewDocData(data[Object.keys(data)[0]]);
+        if (!lastOrderReceived) {
+          setLastOrderReceived(true);
+        }
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (lastOrderReceived && (!isMobileDevice())) {
+      if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            const notification = new Notification('New Order Received', {
+              body: newDocData.msg,
+            });
+
+            notification.onclick = () => {
+              navigate("/wow-pizza/orders")
+            };
+          } else {
+            console.warn('Push notification permission denied');
+          }
+        });
+      }
+    }
+
+  }, [newDocData]);
+
+
+
+
 
   useEffect(() => {
     setUserInfo(authReducerState.userInfo)
@@ -95,78 +176,6 @@ const Header = (props) => {
         >
           <MenuOutlinedIcon width="20" height="20" />
         </IconButton>
-        {/* <IconButton
-          aria-label="menu"
-          color="inherit"
-          aria-controls="dd-menu"
-          aria-haspopup="true"
-          onClick={handleClick5}
-        >
-          <AddToPhotosOutlinedIcon />
-        </IconButton>
-        <Menu
-          id="dd-menu"
-          anchorEl={anchorEl5}
-          keepMounted
-          open={Boolean(anchorEl5)}
-          onClose={handleClose5}
-          anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
-          transformOrigin={{ horizontal: "left", vertical: "top" }}
-          sx={{
-            "& .MuiMenu-paper": {
-              width: "250px",
-              right: 0,
-              top: "70px !important",
-            },
-          }}
-        >
-          <MenuItem onClick={handleClose5}>
-            <Avatar
-              sx={{
-                width: "35px",
-                height: "35px",
-              }}
-            />
-            <Box
-              sx={{
-                ml: 2,
-              }}
-            >
-              New account
-            </Box>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleClose5}>
-            <Avatar
-              sx={{
-                width: "35px",
-                height: "35px",
-              }}
-            />
-            <Box
-              sx={{
-                ml: 2,
-              }}
-            >
-              New Page
-            </Box>
-          </MenuItem>
-          <MenuItem onClick={handleClose5}>
-            <Avatar
-              sx={{
-                width: "35px",
-                height: "35px",
-              }}
-            />
-            <Box
-              sx={{
-                ml: 2,
-              }}
-            >
-              New Component
-            </Box>
-          </MenuItem>
-        </Menu> */}
         Last Login:  {userInfo.last_login_time}
         <Box flexGrow={1} />
         <IconButton
@@ -194,9 +203,9 @@ const Header = (props) => {
             },
           }}
         >
-          <MenuItem onClick={handleClose}>Action</MenuItem>
+          {/* <MenuItem onClick={handleClose}>Action</MenuItem>
           <MenuItem onClick={handleClose}>Action Else</MenuItem>
-          <MenuItem onClick={handleClose}>Another Action</MenuItem>
+          <MenuItem onClick={handleClose}>Another Action</MenuItem> */}
         </Menu>
         Hi, {userInfo.first_name}
         <Box

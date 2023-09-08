@@ -14,6 +14,11 @@ import { fetchAllOrders, updateOrderStatus } from "../../redux/actions/Items";
 import Stomp from 'stompjs';
 import sound from './sound.wav'
 import UserSession from "../../services/auth";
+import { useFirebase } from "../../FirebaseService";
+import { getFirestore, doc, onSnapshot, collection } from 'firebase/firestore';
+import { getDatabase, ref, onValue, orderByChild, orderByValue, limitToLast, query } from 'firebase/database';
+
+
 
 
 const Orders = () => {
@@ -22,45 +27,34 @@ const Orders = () => {
     const [orders, setOrders] = useState([])
     const audioElement = new Audio(sound);
 
-    useEffect(() => {
-        const client = Stomp.client('ws://52.54.183.1:15674/ws');
 
-        const onConnect = () => {
-            console.log('Connected to RabbitMQ via WebSocket');
+    // ============== RABBIT MQ WEB SOCKET ==================
+    // useEffect(() => {
+    //     const client = Stomp.client('ws://54.80.184.171:15674/ws');
 
-            client.subscribe('/exchange/orders', (message) => {
-                const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
-                audioElement.play()
-                dispatch(fetchAllOrders(payload))
-            });
-        };
+    //     const onConnect = () => {
+    //         console.log('Connected to RabbitMQ via WebSocket');
 
-        const onDisconnect = () => {
-            console.log('Disconnected from RabbitMQ via WebSocket');
-            // client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
-        };
+    //         client.subscribe('/exchange/orders', (message) => {
+    //             const payload = { today_records: true, order_by: { key: "created_at", sorting: "desc" }, or_filters: { status: ["placed", "inKitchen"] } }
+    //             audioElement.play()
+    //             dispatch(fetchAllOrders(payload))
+    //         });
+    //     };
 
-        client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
-        return () => {
-            if (client && client.connected) { // Check if the client is connected before disconnecting
-                client.disconnect();
-            }
-        };
-    }, []);
+    //     const onDisconnect = () => {
+    //         console.log('Disconnected from RabbitMQ via WebSocket');
+    //         // client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
+    //     };
 
+    //     client.connect('admin', '1m2p3k4n', onConnect, onDisconnect);
+    //     return () => {
+    //         if (client && client.connected) { // Check if the client is connected before disconnecting
+    //             client.disconnect();
+    //         }
+    //     };
+    // }, []);
 
-    // function getLocalStream() {
-    //     navigator.mediaDevices
-    //       .getUserMedia({ video: true, audio: true, speaker: true, sound: true })
-    //       .then((stream) => {
-    //         window.localStream = stream; // A
-    //         window.localAudio.srcObject = stream; // B
-    //         window.localAudio.autoplay = true; // C
-    //       })
-    //       .catch((err) => {
-    //         console.error(`you got an error: ${err}`);
-    //       });
-    //   }
 
 
     const handleUpdateOrderStatus = (orderId, status) => {

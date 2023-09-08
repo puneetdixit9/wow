@@ -4,6 +4,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { baseTheme } from './assets/global/Theme-variable'
 import Themeroutes from "./routes/Router";
 import FormLayouts from "./views/FormLayouts/FormLayouts.js";
+import { FirebaseProvider } from './FirebaseService';
+
 
 const App = () => {
   const allRoutes = [
@@ -38,18 +40,20 @@ const App = () => {
   user = JSON.parse(user)
   if (isAuthenticated && (isOTPPath || isPathInAuthRoutes)) {
     console.log("User Role -> ", user.role)
-    if(user.role === "customer") {
+    if (user.role === "customer") {
       return <Navigate to="/wow-pizza/food-items" replace />;
     } else if (user.role === "admin") {
       return <Navigate to="/wow-pizza/dashboard" replace />;
     }
   }
-  
+
 
   const theme = baseTheme;
   return (
     <ThemeProvider theme={theme}>
+      <FirebaseProvider>
         {routing}
+      </FirebaseProvider>
     </ThemeProvider>
   );
 };

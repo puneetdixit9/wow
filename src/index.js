@@ -9,7 +9,7 @@ import store from './redux/store'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Suspense fallback={<Spinner />}>
       <BrowserRouter>
         <Provider store={store}>
@@ -17,7 +17,7 @@ root.render(
         </Provider>,
       </BrowserRouter>
     </Suspense>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 reportWebVitals();

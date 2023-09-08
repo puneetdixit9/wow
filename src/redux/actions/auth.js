@@ -23,7 +23,6 @@ const globalConfig = {
 }
 
 export const login = (payload) => async dispatch => {
-    console.log('Calling action : login()')
     await dispatch(fetchLogin())
     try {
         const response = await apiClient.post(LOGIN_API, payload)
@@ -34,7 +33,6 @@ export const login = (payload) => async dispatch => {
 }
 
 export const register = (payload) => async dispatch => {
-    console.log('Calling action : register()')
     await dispatch(fetchRegister())
     try {
         const response = await apiClient.post(REGISTER_API, payload)
@@ -45,7 +43,6 @@ export const register = (payload) => async dispatch => {
 }
 
 export const passwordReset = (payload) => async dispatch => {
-    console.log('Calling action : passwordReset()')
     try {
         const response = await apiClient.put(
             CHANGE_PASSWORD,
@@ -60,7 +57,6 @@ export const passwordReset = (payload) => async dispatch => {
 
 
 export const sendOtpToPhone = (payload) => async dispatch => {
-    console.log('Calling action --------> : sendOtp()', payload)
     await dispatch(sendOtp())
     try {
         const response = await apiClient.post(
@@ -78,7 +74,6 @@ export const resetOtpErr = () => dispatch => {
 }
 
 export const fetchUserInformation = () => async dispatch => {
-    console.log('Calling action --------> : fetchUserInformation()')
     await dispatch(fetchUserInfo())
     try {
         const response = await apiClient.get(USER_INFO)

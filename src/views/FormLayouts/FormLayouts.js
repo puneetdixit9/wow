@@ -5,10 +5,10 @@ import LogoIcon from "../../layouts/FullLayout/Logo/LogoIcon";
 
 const FormLayouts = ({ form }) => {
   const images = [
-    "https://b.zmtcdn.com/data/dish_photos/65d/a819c99767aad4df7325195779aa165d.jpg",
-    "https://b.zmtcdn.com/data/dish_photos/703/a674b016a42b22e26118719f45cb4703.jpg",
-    "https://b.zmtcdn.com/data/dish_photos/72b/d5bc5b32dd177f5f207cad66556a572b.jpg",
-    "https://b.zmtcdn.com/data/dish_photos/e92/538dc8e697f161c9897e52eb675aee92.jpg",
+    "https://wow-pizza.s3.amazonaws.com/wow-pizza-images/pizza.jpg",
+    "https://wow-pizza.s3.amazonaws.com/wow-pizza-images/Pizza2.jpg",
+    "https://wow-pizza.s3.amazonaws.com/wow-pizza-images/Pizza3.jpg",
+    "https://wow-pizza.s3.amazonaws.com/wow-pizza-images/Burger.jpg",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
