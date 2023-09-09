@@ -16,6 +16,7 @@ import { getFirestore, doc, onSnapshot, collection } from 'firebase/firestore';
 import sound from './sound.wav'
 
 import { useFirebase } from "../../../FirebaseService";
+import UserSession from "../../../services/auth";
 
 
 import {
@@ -73,24 +74,28 @@ const Header = (props) => {
 
 
   useEffect(() => {
-    console.log("=====>> ", isMobileDevice())
     let isFirstOrder = true;
+    let unsubscribe = null
 
-    const unsubscribe = onValue(recentPostsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (isFirstOrder) {
-        isFirstOrder = false;
-      } else {
-        console.log('New Order Placed:', data[Object.keys(data)[0]]);
-        setNewDocData(data[Object.keys(data)[0]]);
-        if (!lastOrderReceived) {
-          setLastOrderReceived(true);
+    if (UserSession.isAdmin()) {
+      unsubscribe = onValue(recentPostsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (isFirstOrder) {
+          isFirstOrder = false;
+        } else {
+          console.log('New Order Placed:', data[Object.keys(data)[0]]);
+          setNewDocData(data[Object.keys(data)[0]]);
+          if (!lastOrderReceived) {
+            setLastOrderReceived(true);
+          }
         }
-      }
-    });
+      });
+    }
 
     return () => {
-      unsubscribe();
+      if (unsubscribe !== null) {
+        unsubscribe();
+      }
     }
   }, []);
 
