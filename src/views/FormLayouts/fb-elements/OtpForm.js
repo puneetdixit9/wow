@@ -16,6 +16,8 @@ const OtpForm = () => {
   const [otpValue, setOtpValue] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const buttonRef = useRef(null);
+  const [loadingResetOtp, setLoadingResetOtp] = useState(false)
+  const [loadingLogin, setLoadingLogin] = useState(false) 
 
   useEffect(() => {
     dispatch(resetOtpErr())
@@ -44,6 +46,7 @@ const OtpForm = () => {
       otp: otpValue
     }
     dispatch(login(payload));
+    setLoadingLogin(true)
   }
 
   const handleResendOtp = () => {
@@ -51,6 +54,7 @@ const OtpForm = () => {
       phone: phoneNumber.slice(3)
     }
     dispatch(sendOtpToPhone(payload));
+    setLoadingResetOtp(true)
   }
 
   useEffect(() => {
@@ -58,6 +62,18 @@ const OtpForm = () => {
       buttonRef.current.click();
     }
   }, [otpValue]);
+
+  useEffect(() => {
+      if (!authReducerState.isLoading) {
+          if (loadingResetOtp) {
+              setLoadingResetOtp(false)
+          }
+          if (loadingLogin) {
+              setLoadingLogin(false)
+        }
+      }
+      
+  }, [authReducerState.isLoading]);
 
   useEffect(() => {
     setErrorMsg(authReducerState.loginError?.error)
@@ -107,7 +123,7 @@ const OtpForm = () => {
               </Typography>
             </Box>
 
-            <Box display="flex" justifyContent="space-between">
+            <Box display="flex" justifyContent="center">
               {[...Array(otpLength)].map((_, index) => (
                 <input
                   key={index}
@@ -131,7 +147,7 @@ const OtpForm = () => {
                     borderRadius: "5px",
                     outline: "none",
                     marginLeft: index === 0 ? "5px" : "0",
-                    marginRight: index === otpLength - 1 ? "5px" : "0",
+                    marginRight: index !== otpLength - 1 ? "10px" : "0",
                   }}
                 />
               ))}
@@ -148,8 +164,9 @@ const OtpForm = () => {
                     variant="contained"
                     sx={{ width: 140 }}
                     onClick={handleResendOtp}
+                    disabled={loadingResetOtp}
                   >
-                    {authReducerState.isLoading ? (
+                    {loadingResetOtp ? (
                       <CircularProgress color="inherit" size={25} />
                     ) : (
                       "Resend OTP"
@@ -163,9 +180,9 @@ const OtpForm = () => {
                     sx={{ width: 140 }}
                     ref={buttonRef}
                     onClick={handleSubmitOtp}
-                    disabled={!otpValue.length}
+                    disabled={!otpValue.length || loadingLogin}
                   >
-                    {authReducerState.isLoading ? (
+                    {loadingLogin ? (
                       <CircularProgress color="inherit" size={25} />
                     ) : (
                       "Verify OTP"
